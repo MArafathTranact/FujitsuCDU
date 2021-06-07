@@ -1,0 +1,16 @@
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\FujitsuCDU.exe.config
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\FujitsuCDU.exe
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\FujitsuCDU.pdb
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\Newtonsoft.Json.dll
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\System.Net.Http.Formatting.dll
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\Newtonsoft.Json.xml
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\System.Net.Http.Formatting.xml
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.exe.config
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.CDU.resources
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.Properties.Resources.resources
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.GenerateResource.cache
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.CoreCompileInputs.cache
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.CopyComplete
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.exe
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.pdb
+C:\Projects\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csprojAssemblyReference.cache

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FujitsuCDU", "FujitsuCDU\FujitsuCDU.csproj", "{2AE4E3D9-DDD4-4DBA-8951-8CA929BF8584}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FujitsuInstaller", "FujitsuInstaller\FujitsuInstaller.vdproj", "{91605C68-A743-4316-A0F8-D07A4531F973}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AE4E3D9-DDD4-4DBA-8951-8CA929BF8584}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AE4E3D9-DDD4-4DBA-8951-8CA929BF8584}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AE4E3D9-DDD4-4DBA-8951-8CA929BF8584}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AE4E3D9-DDD4-4DBA-8951-8CA929BF8584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91605C68-A743-4316-A0F8-D07A4531F973}.Debug|Any CPU.ActiveCfg = Debug
+		{91605C68-A743-4316-A0F8-D07A4531F973}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6CCA0E5-F99C-4409-911A-6D08F80D3D84}
+	EndGlobalSection
+EndGlobal
