@@ -51,6 +51,7 @@ namespace FujitsuCDU
         readonly ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
         public NetworkStream clientStream;
         public Thread listenThread;
+        public System.Timers.Timer timeoutTrans = new System.Timers.Timer(1000 * 10);
         //
 
         #region Constant
@@ -288,6 +289,10 @@ namespace FujitsuCDU
                     if (CreateEZCashSocket())
                     {
                         SocketConnected = true;
+                        TraceMessage($"EZCash Socket Connected.");
+
+                        Thread initCDU = new Thread(InitCDU);
+                        initCDU.Start();
                         // DisplayCassetteStatus();
                         break;
 
@@ -299,8 +304,6 @@ namespace FujitsuCDU
 
                 }
 
-                Thread initCDU = new Thread(InitCDU);
-                initCDU.Start();
 
             }
             catch (Exception ex)
@@ -332,7 +335,7 @@ namespace FujitsuCDU
                         }));
 
                         FujitsuProcessorInitCDU();
-                        Thread.Sleep(5000);
+                        Thread.Sleep(15000);
                         if (IsProcessCompleted)
                         {
                             break;
@@ -376,6 +379,7 @@ namespace FujitsuCDU
                 TraceMessage($"Getting Cassette status from EZcash Service.");
                 if (ezCashclient != null && ezCashclient.Connected)
                 {
+                    logger.Log($"Client socket connected .");
                     this.Invoke(new MethodInvoker(delegate
                     {
                         pnlCasstteStatus.Visible = true;
@@ -383,6 +387,10 @@ namespace FujitsuCDU
 
                     SendSocketMessage($"0032.000..9");
 
+                }
+                else
+                {
+                    logger.Log($"Client socket not connected.");
                 }
             }
             catch (Exception ex)
@@ -507,15 +515,13 @@ namespace FujitsuCDU
 
                 if (c == (char)Keys.Return)
                 {
-                    // DoSomethingWithBarcode(_barcode);
-                    // MessageBox.Show(_barcode);
                     if (!IsDown && !IsDisConnected)
                     {
-                        _barcode = "097846993";
+                        // _barcode = "097846993";
+                        TraceMessage($"Barcode Received : {_barcode}");
                         Thread cduDispense = new Thread(() => ProcessBarcodeAndDispense(_barcode));
                         cduDispense.Start();
                         cduDispense.Join();
-
                         _barcode = "";
                     }
                 }
@@ -547,6 +553,9 @@ namespace FujitsuCDU
 
                 });
                 thread.Start();
+
+                timeoutTrans.Start();
+                timeoutTrans.Enabled = true;
 
                 await ProcessBarcode(barcode);
 
@@ -580,10 +589,14 @@ namespace FujitsuCDU
 
         }
 
+
         private void CDU_Load(object sender, EventArgs e)
         {
             try
             {
+
+                timeoutTrans.Elapsed += new ElapsedEventHandler(TimeOutTransaction);
+
                 lblInitial1.SetBounds((pnlInitialize.ClientSize.Width - lblInitial1.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial1.Height) / 2, 0, 0, BoundsSpecified.Location);
 
                 lblInitial2.SetBounds((pnlInitailize2.ClientSize.Width - lblInitial2.Width) / 2, ((pnlInitailize2.ClientSize.Height - lblInitial2.Height) / 2) - 20, 0, 0, BoundsSpecified.Location);
@@ -592,8 +605,6 @@ namespace FujitsuCDU
 
                 lblMessage2.SetBounds((pnlMessage2.ClientSize.Width - lblMessage2.Width) / 2, (pnlMessage2.ClientSize.Height - lblMessage2.Height) / 2, 0, 0, BoundsSpecified.Location);
 
-                // cduProcessor = new FujitsuCDUProcessor(this);
-                // fujitsuBarcode = new FujitsuBarcode(cduProcessor);
 
                 //
                 var comPort = GetFileLocation("ComPort");
@@ -928,9 +939,10 @@ namespace FujitsuCDU
                                         if (CRC1.Equals(ReceivedCRC))
                                         {
                                             TraceMessage($"Received CRC matches calculated CRC.");
+                                            IsProcessCompleted = true;
+
                                             MyWriteStr(DLE + ACK);
                                             ProcessMsg(S.Substring(4, S.Length - 8), byteBuffer.Skip(4).ToArray());
-                                            IsProcessCompleted = true;
                                         }
                                         else
                                         {
@@ -1595,6 +1607,42 @@ namespace FujitsuCDU
             DisplayDescription(5, "", 0, "", 0, "Please scan the barcode", 20, "", 0);
             timeoutTimer.Stop();
             timeoutTimer.Enabled = false;
+            IsProcessCompleted = true;
+        }
+
+        private void TimeOutTransaction(object source, ElapsedEventArgs e)
+        {
+            try
+            {
+                if (!IsProcessCompleted)
+                {
+                    TraceMessage($"Processing  : LABEL1=<{"Invalid Card"}>Label2=<Transaction cancelled.>");
+                    var lblInitial1 = Controls.Find("lblInitial1", true).FirstOrDefault();
+                    var lblInitial2 = Controls.Find("lblInitial2", true).FirstOrDefault();
+
+                    BeginInvoke((Action)delegate ()
+                    {
+                        (lblInitial1 as Label).Text = string.Empty;
+                    });
+                    BeginInvoke((Action)delegate ()
+                    {
+                        (lblInitial2 as Label).Text = string.Empty;
+                    });
+
+                    DisplayDescription(3, "", 20, "", 20, "Invalid Card", 20, "", 20);
+                    DisplayDescription(4, "", 20, "", 20, "", 0, "Transaction cancelled.", 20);
+
+                    timeoutTrans.Stop();
+                    timeoutTrans.Enabled = false;
+
+                    timeoutTimer.Enabled = true;
+                    timeoutTimer.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                TraceMessage($"Exception at TimeOutTransaction {ex.Message }");
+            }
         }
 
         public async Task ProcessBarcode(string barcode)
@@ -1612,7 +1660,7 @@ namespace FujitsuCDU
                 }
                 catch (Exception ex)
                 {
-                    logger.Log($"ParseBarcodeMessage {ex.Message} ");
+                    logger.Log($"ProcessBarcode {ex.Message} ");
                 }
             });
         }
@@ -1623,20 +1671,10 @@ namespace FujitsuCDU
             {
                 try
                 {
-                    //logger.Log($"Sending Socket transaction request {barcode}..");
-                    //CommState = FujitsuCDUProcessor.TCommState.csReady;
-                    //IsDispenseReqSent = true;
-                    //State = FujitsuCDUProcessor.TState.stWaitTranReply;
-                    ////cduProcessor.devState = FujitsuCDUProcessor.TDevState.stWaitTranReply;
-                    //// cduProcessor.SendMessage("6003ff00002cfedcba9830b130b130303030b1303030303030301500000030303030303030303030303030303030000000001c");
-                    //SendSocketMessage($"1111.000...1 > .{barcode}..ABC....");
-                    //var ezResponse = cduProcessor.ezcashSocket.ReceiveMessage();
-
                     var dispenseMessage = ezResponse.Split('.')[4].Replace("\u001d", "");
                     DispensingMessage = dispenseMessage;
                     var originalAmount = ezResponse.Split('.')[5].Replace("\u001d", "");
                     var dispensingAmount = ezResponse.Split('.')[6].Replace("\u001d", "");
-                    //var errorMessage = ezResponse.Split('.')[32].Substring(1, ezResponse.Split('.')[32].Length - 1);
                     logger.Log($"Received Socket Dispense response : {dispenseMessage}");
 
                     if (Convert.ToInt64(dispenseMessage) != 0)
@@ -1652,14 +1690,11 @@ namespace FujitsuCDU
                         timeoutTimer.Enabled = true;
                         timeoutTimer.Start();
                     }
-                    //logger.Log($"Received Socket response {dispenseMessage} , Original Amount = ${originalAmount} , Dispensing Amount= ${dispensingAmount}");
-                    //dispenseMessage = "150000000000";
-
 
                 }
                 catch (Exception ex)
                 {
-                    logger.Log($"ParseBarcodeMessage {ex.Message} ");
+                    logger.Log($"ProcessBarcodeTransaction {ex.Message} ");
                 }
             });
         }
@@ -1675,8 +1710,6 @@ namespace FujitsuCDU
                     try
                     {
                         ezResponse = ezResponse.Remove(0, ezResponse.IndexOf('['));
-
-
                         int index = ezResponse.LastIndexOf("]");
                         if (index > 0)
                             ezResponse = ezResponse.Substring(0, index + 1);
@@ -1917,7 +1950,7 @@ namespace FujitsuCDU
                            });
 
                         }
-                        logger.Log($"ParseBarcodeMessage {ex.Message} ");
+                        logger.Log($"ProcessCassetteStatus {ex.Message} ");
 
                     }
 
@@ -2006,11 +2039,13 @@ namespace FujitsuCDU
                 clientStream = ezCashclient.GetStream();
                 listenThread = new Thread(ReceiveMessage);
                 listenThread.Start();
+                SocketConnected = true;
                 return true;
             }
             catch (Exception ex)
             {
                 logger.Log($"Client socket CreateEZCashSocket {ex.Message} ");
+                SocketConnected = false;
                 return false;
             }
 
@@ -2099,6 +2134,7 @@ namespace FujitsuCDU
 
                 byte[] buffer = new byte[ezCashclient.ReceiveBufferSize];
                 byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(message); //("1111.000...1 > .38527859440..ABC....");
+                logger.Log($"Sending request to EZCash {message} ");
                 clientStream.Write(bytesToSend, 0, bytesToSend.Length);
 
             }
@@ -2116,9 +2152,11 @@ namespace FujitsuCDU
                 switch (type)
                 {
                     case "40.":
+                        logger.Log($"Parsing dispense response.");
                         await ProcessBarcodeTransaction(ezCashMessage);
                         break;
                     case "10.": //10.000.000.1
+                        logger.Log($"Parsing device monitor commands.");
                         if (ezCashMessage.Equals("10.000.000.2.."))
                         {
                             await ProcessDownRequest(ezCashMessage);
@@ -2136,6 +2174,7 @@ namespace FujitsuCDU
                         }
                         break;
                     default:
+                        logger.Log($"Parsing Cassette status details.");
                         await ProcessCassetteStatus(ezCashMessage);
                         break;
                 }
