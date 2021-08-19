@@ -51,7 +51,7 @@ namespace FujitsuCDU
         readonly ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
         public NetworkStream clientStream;
         public Thread listenThread;
-        public System.Timers.Timer timeoutTrans = new System.Timers.Timer(1000 * 10);
+        public System.Timers.Timer timeoutTrans = new System.Timers.Timer(1000 * 15);
         //
 
         #region Constant
@@ -1677,6 +1677,9 @@ namespace FujitsuCDU
                     var dispensingAmount = ezResponse.Split('.')[6].Replace("\u001d", "");
                     logger.Log($"Received Socket Dispense response : {dispenseMessage}");
 
+
+                    timeoutTrans.Stop();
+                    timeoutTrans.Enabled = false;
                     if (Convert.ToInt64(dispenseMessage) != 0)
                     {
                         DispenseAmount(dispensingAmount, originalAmount, dispenseMessage.SplitInParts(2).ToArray());
