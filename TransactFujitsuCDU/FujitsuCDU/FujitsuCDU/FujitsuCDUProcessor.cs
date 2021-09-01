@@ -183,8 +183,8 @@ namespace FujitsuCDU
         {
             try
             {
-                logger.Log("Entered DispenseAmount");
-                logger.Log($"Loading screen : Dispensing ${ amount} of ${ originalAmount} ");
+                Logger.LogWithNoLock("Entered DispenseAmount");
+                Logger.LogWithNoLock($"Loading screen : Dispensing ${ amount} of ${ originalAmount} ");
                 DisplayDescription(3, "", 20, "", 20, $"Dispensing ${amount} of ${originalAmount}", 20, "", 20);
 
                 CanRetry = false;
@@ -238,7 +238,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                logger.Log(ex.Message);
+                Logger.LogWithNoLock(ex.Message);
             }
         }
 
@@ -826,7 +826,7 @@ namespace FujitsuCDU
 
         private void TraceMessage(string message)
         {
-            logger.Log($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{message}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{message}");
         }
 
         private void GetConfig()
@@ -1093,7 +1093,7 @@ namespace FujitsuCDU
                     var originalAmount = ezResponse.Split('.')[5].Replace("\u001d", "");
                     var dispensingAmount = ezResponse.Split('.')[6].Replace("\u001d", "");
                     //var errorMessage = ezResponse.Split('.')[32].Substring(1, ezResponse.Split('.')[32].Length - 1);
-                    logger.Log($"Received Socket Dispense response : {dispenseMessage}");
+                    Logger.LogWithNoLock($"Received Socket Dispense response : {dispenseMessage}");
 
                     if (Convert.ToInt64(dispenseMessage) != 0)
                     {
@@ -1115,7 +1115,7 @@ namespace FujitsuCDU
                 }
                 catch (Exception ex)
                 {
-                    logger.Log($"ParseBarcodeMessage {ex.Message} ");
+                    Logger.LogWithNoLock($"ParseBarcodeMessage {ex.Message} ");
                 }
             });
         }
@@ -1373,7 +1373,7 @@ namespace FujitsuCDU
                             });
 
                         }
-                        logger.Log($"ParseBarcodeMessage {ex.Message} ");
+                        Logger.LogWithNoLock($"ParseBarcodeMessage {ex.Message} ");
 
                     }
 

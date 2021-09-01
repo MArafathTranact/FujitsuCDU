@@ -29,4 +29,3 @@ C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.CopyComplete
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.exe
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.pdb
-C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csprojAssemblyReference.cache

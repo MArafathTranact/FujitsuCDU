@@ -38,7 +38,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                logger.Log($"Client socket CreateEZCashSocket {ex.Message} ");
+                Logger.LogWithNoLock($"Client socket CreateEZCashSocket {ex.Message} ");
                 return false;
             }
 
@@ -83,7 +83,7 @@ namespace FujitsuCDU
                     }
                     catch (Exception ex)
                     {
-                        logger.Log($"Client socket ReceiveMessage {ex.Message} ");
+                        Logger.LogWithNoLock($"Client socket ReceiveMessage {ex.Message} ");
                         if (ezCashclient != null)
                         {
                             ezCashclient.Client.Shutdown(SocketShutdown.Both);
@@ -108,7 +108,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                logger.Log($"Client socket ReceiveMessage {ex.Message} ");
+                Logger.LogWithNoLock($"Client socket ReceiveMessage {ex.Message} ");
                 if (ezCashclient != null)
                 {
                     ezCashclient.Client.Shutdown(SocketShutdown.Both);
@@ -131,7 +131,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                logger.Log($"Client socket SendMessage {ex.Message} ");
+                Logger.LogWithNoLock($"Client socket SendMessage {ex.Message} ");
             }
         }
         public async Task ProcessSocketMessage(string ezCashMessage)
@@ -169,7 +169,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                logger.Log($"Client socket ReceiveMessage {ex.Message} ");
+                Logger.LogWithNoLock($"Client socket ReceiveMessage {ex.Message} ");
                 //10.000.000.7
             }
 
@@ -203,7 +203,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                logger.Log($"Client socket ReceiveMessage {ex.Message} ");
+                Logger.LogWithNoLock($"Client socket ReceiveMessage {ex.Message} ");
             }
         }
     }

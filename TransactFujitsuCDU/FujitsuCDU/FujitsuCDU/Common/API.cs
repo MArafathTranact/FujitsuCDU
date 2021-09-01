@@ -200,7 +200,7 @@ namespace FujitsuCDU.Common
 
         private void LogEvents(string input)
         {
-            logger.Log($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{input}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{input}");
         }
     }
 }

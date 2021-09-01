@@ -28,7 +28,7 @@ namespace FujitsuCDU.EZCashModule
                 var dispenseMessage = JsonConvert.SerializeObject(dispenseReq);
                 byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(dispenseMessage);
 
-                logger.Log($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}: Dev 99 : sending messages .{dispenseReq.Barcode}");
+                Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}: Dev 99 : sending messages .{dispenseReq.Barcode}");
                 nwStream.Write(bytesToSend, 0, bytesToSend.Length);
 
 
@@ -36,7 +36,7 @@ namespace FujitsuCDU.EZCashModule
                 int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
 
 
-                logger.Log($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}: Dev 99 : reading response .");
+                Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}: Dev 99 : reading response .");
                 string ezCashResponse = utilities.ByteToHexaEZCash(bytesToRead.Take(bytesRead).ToArray(), bytesRead);
                 // client.Close();
 
@@ -99,7 +99,7 @@ namespace FujitsuCDU.EZCashModule
 
         private void LogEvents(string input)
         {
-            logger.Log($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{input}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{input}");
         }
     }
 }

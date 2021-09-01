@@ -12,40 +12,45 @@ namespace FujitsuCDU
     {
         public static object _locked = new object();
 
-        public void Log(string message)
+        public static void LogWithNoLock(string message)
         {
-            lock (_locked)
+            string folder = GetFileLocation("Trace");
+            if (!File.Exists(folder))
             {
-                string folder = GetFileLocation("Trace");
-                if (!File.Exists(folder))
+                using (FileStream fs = File.Create(folder))
                 {
-                    // Create a file to write to.
-                    using (StreamWriter sw = File.CreateText(folder))
-                    {
-                        sw.WriteLine($"{message}");
+                    byte[] info = new UTF8Encoding(true).GetBytes(message);
+                    fs.Write(info, 0, info.Length);
 
-                    }
                 }
-                else
+                //// Create a file to write to.
+                //using (StreamWriter sw = File.CreateText(folder))
+                //{
+                //    sw.WriteLine($"{message}");
+
+                //}
+
+            }
+            else
+            {
+
+                //using (StreamWriter sw = File.AppendText(folder))
+                //{
+                //    //sw.WriteLine($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}{deviceId} {message}");
+                //    sw.WriteLine($"{message}");
+
+                //}               
+                using (var fs = new FileStream(folder, FileMode.Append, FileAccess.Write, FileShare.Write))
+                using (var sw = new StreamWriter(fs))
                 {
-                    // This text is always added, making the file longer over time
-                    // if it is not deleted.
-                    using (StreamWriter sw = File.AppendText(folder))
-                    {
-                        //sw.WriteLine($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}{deviceId} {message}");
-                        sw.WriteLine($"{message}");
-
-                    }
+                    sw.WriteLine(message);
                 }
-
-
 
             }
 
-
         }
 
-        private string GetFileLocation(string keyvalue)
+        private static string GetFileLocation(string keyvalue)
         {
             return ConfigurationManager.AppSettings[keyvalue];
         }

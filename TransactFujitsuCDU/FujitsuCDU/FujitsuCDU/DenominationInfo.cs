@@ -62,7 +62,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                logger.Log($"{DateTime.Now:MM-dd-yyyy HH:mm:ss} : Dev {deviceId} : {ex.Message}");
+                Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss} : Dev {deviceId} : {ex.Message}");
                 return denoms;
             }
         }

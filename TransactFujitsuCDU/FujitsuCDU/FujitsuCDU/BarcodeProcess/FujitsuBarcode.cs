@@ -32,7 +32,7 @@ namespace FujitsuCDU.BarcodeProcess
             {
                 try
                 {
-                    logger.Log($"Sending Socket transaction request {barcode}..");
+                    Logger.LogWithNoLock($"Sending Socket transaction request {barcode}..");
                     cduProcessor.CommState = FujitsuCDUProcessor.TCommState.csReady;
                     cduProcessor.IsDispenseReqSent = true;
                     cduProcessor.State = FujitsuCDUProcessor.TState.stWaitTranReply;
@@ -41,7 +41,7 @@ namespace FujitsuCDU.BarcodeProcess
                 }
                 catch (Exception ex)
                 {
-                    logger.Log($"ParseBarcodeMessage {ex.Message} ");
+                    Logger.LogWithNoLock($"ParseBarcodeMessage {ex.Message} ");
                 }
             });
         }
@@ -50,13 +50,13 @@ namespace FujitsuCDU.BarcodeProcess
         {
             try
             {
-                logger.Log($"Sending Socket response..");
+                Logger.LogWithNoLock($"Sending Socket response..");
                 var message = "1111.000...1 > .097846993..ABC....";
                 cduProcessor.ezcashSocket.SendMessage(message);
             }
             catch (Exception ex)
             {
-                logger.Log($"SendSocketResponse {ex.Message} ");
+                Logger.LogWithNoLock($"SendSocketResponse {ex.Message} ");
             }
         }
 

@@ -73,7 +73,7 @@ namespace FujitsuCDU
 
         private void LogEvents(string input)
         {
-            logger.Log(input);
+            Logger.LogWithNoLock(input);
         }
 
         public string ConvertHex(string hexString)
