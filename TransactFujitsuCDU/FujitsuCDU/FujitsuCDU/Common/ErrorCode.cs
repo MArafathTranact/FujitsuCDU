@@ -26,7 +26,7 @@ namespace FujitsuCDU.Common
                 new ErrorCode() { Error = "2800", MappingCan = "02" ,ErrorDescription="2nd Cassette pickup error"},
                 new ErrorCode() { Error = "3800", MappingCan = "03" ,ErrorDescription="3rd Cassette pickup error"},
                 new ErrorCode() { Error = "4800", MappingCan = "04" ,ErrorDescription="4th Cassette pickup error"},
-                new ErrorCode() { Error = "1C00", MappingCan = "05" ,ErrorDescription="5th Cassette pickup error"},
+                new ErrorCode() { Error = "1C00", MappingCan = "05" ,ErrorDescription="5th Cassette pickup error"}, 
                 new ErrorCode() { Error = "2C00", MappingCan = "06" ,ErrorDescription="6th Cassette pickup error"},
                 new ErrorCode() { Error = "3C00", MappingCan = "07" ,ErrorDescription="7th Cassette pickup error"},
                 new ErrorCode() { Error = "4C00", MappingCan = "08" ,ErrorDescription="8th Cassette pickup error"},

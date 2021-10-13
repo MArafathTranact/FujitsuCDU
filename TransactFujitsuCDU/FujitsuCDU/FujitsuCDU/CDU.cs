@@ -51,6 +51,7 @@ namespace FujitsuCDU
         public NetworkStream clientStream;
         public Thread listenThread;
         public System.Timers.Timer timeoutTrans = new System.Timers.Timer(1000 * 15);
+        // public System.Timers.Timer timeoutTransForCoins = new System.Timers.Timer(1000 * 15);
         public string WelcomeScreen1 = string.Empty;
         public string WelcomeScreen2 = string.Empty;
         //
@@ -173,7 +174,7 @@ namespace FujitsuCDU
                                 lblMessage1.Text = "Please scan the Barcode.";
                             else if (descriptionLoad == "3")
                                 lblMessage1.Text = "Waiting for data in.";
-                            lblMessage1.Font = new Font("Calibri", 20, FontStyle.Italic);
+                            lblMessage1.Font = new Font("Calibri", 30, FontStyle.Italic);
 
                             lblInitial1.SetBounds((pnlInitialize.ClientSize.Width - lblInitial1.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial1.Height) / 2, 0, 0, BoundsSpecified.Location);
                             lblInitial2.SetBounds((pnlInitialize.ClientSize.Width - lblInitial2.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial2.Height) / 2, 0, 0, BoundsSpecified.Location);
@@ -238,7 +239,7 @@ namespace FujitsuCDU
 
                         lblInitial2.Text = string.Empty;
                         lblMessage1.Text = "Initializing Dispenser...";
-                        lblMessage1.Font = new Font("Calibri", 20, FontStyle.Regular);
+                        lblMessage1.Font = new Font("Calibri", 30, FontStyle.Regular);
                         lblMessage1.SetBounds((pnlMessage.ClientSize.Width - lblMessage1.Width) / 2, (pnlMessage.ClientSize.Height - lblMessage1.Height) / 2, 0, 0, BoundsSpecified.Location);
                         lblMessage2.Text = string.Empty;
 
@@ -683,7 +684,7 @@ namespace FujitsuCDU
             {
                 LogEvents("Entered DispenseAmount");
                 LogEvents($"Loading screen : Dispensing ${ amount} of ${ originalAmount} ");
-                DisplayDescription(3, "", 20, "", 20, $"Dispensing ${amount} of ${originalAmount}", 20, "", 20);
+                DisplayDescription(3, "", 25, "", 25, $"Dispensing ${amount} of ${originalAmount}", 25, "", 25);
 
                 CanRetry = false;
                 // Sample message:
@@ -885,7 +886,7 @@ namespace FujitsuCDU
                                     {
                                         S = receivedMessage.Substring(4, receivedMessage.Length - 8);
 
-                                        LogEvents($"Dev 99 : Processing ");
+                                        LogEvents($"Processing ");
                                         var receivedBytes = utilities.GetSendBytes(S);
                                         utilities.SplitBytes(receivedBytes, 16); // Write detailed information into Log file.
                                         var crcChecksumByte = new byte[2];
@@ -1213,6 +1214,57 @@ namespace FujitsuCDU
                     }
 
                 }
+                if (work.Contains("FF000064"))
+                {
+
+                    var cassetteRegister1 = work.Substring(42, 8).Trim().ToUpper();
+                    var cassetteRegister2 = work.Substring(138, 8).Trim().ToUpper();
+                    var canStatus = new StringBuilder();
+                    //var errorseverity = new StringBuilder();
+                    //canStatus.Append("0");
+                    foreach (var cassette in cassetteRegister1.SplitInParts(2))
+                    {
+                        foreach (var item in cassette)
+                        {
+                            if (item.ToString() == "8")
+                            {
+                                canStatus.Append("2");
+                            }
+                            else if (item.ToString() == "9")
+                            {
+                                canStatus.Append("4");
+                            }
+                            else
+                            {
+                                canStatus.Append("0");
+                            }
+                            break;
+                        }
+                    }
+
+                    foreach (var cassette in cassetteRegister2.SplitInParts(2))
+                    {
+                        foreach (var item in cassette)
+                        {
+                            if (item.ToString() == "8")
+                            {
+                                canStatus.Append("2");
+                            }
+                            else if (item.ToString() == "9")
+                            {
+                                canStatus.Append("4");
+                            }
+                            else
+                            {
+                                canStatus.Append("0");
+                            }
+                            break;
+                        }
+                    }
+                    // Socketerrorcode = $"0022.000..8.E2000000000000.{canStatus}.0401500000000300000000.{errorseverity}";
+                    SendSocketMessage($"0031.{canStatus}..9");
+                    LogEvents($"Message to EZCash socket : {Socketerrorcode}");
+                }
                 //int i = 0;
                 //TCommonResp R = new TCommonResp();
                 //if (workbyte != null)
@@ -1250,23 +1302,43 @@ namespace FujitsuCDU
         {
             try
             {
-                LogEvents($"Processing  : LABEL1=<Transaction complete.>Label2=<Thank you.>");
+                // Todo for Coin dispensing message
+                if (TotalAmount != DispensingAmount)
+                {
+                    LogEvents($"Processing  : LABEL3=<Dispensing ${ TotalAmount }of ${ TotalAmount}>");
 
-                DisplayDescription(3, string.Empty, 0, string.Empty, 0, "Transaction complete.", 20, string.Empty, 0);
-                DisplayDescription(4, string.Empty, 0, string.Empty, 0, string.Empty, 0, "Thank you.", 20);
+                    DisplayDescription(3, string.Empty, 0, string.Empty, 0, $"Dispensing ${TotalAmount } of ${TotalAmount}", 25, string.Empty, 0);
+                    // DisplayDescription(4, string.Empty, 0, string.Empty, 0, string.Empty, 0, "Thank you.", 25);
+                }
+                else
+                {
+                    DisplayTransactionCompleteScreen();
+                }
 
-                timeoutTimer.Enabled = true;
-                timeoutTimer.Start();
-
-                LogEvents($"Sending EZCash socket response on dispense completed.");
+                LogEvents($"Sending EZCash socket response on cash dispense completed.");
                 SendSocketMessage($"0022.000..9");
                 Thread.Sleep(2000);
                 UpdateCassetteStatus();
+                //
+
             }
             catch (Exception ex)
             {
                 LogEvents($" Exception at OnDispenseCompleted : {ex.Message}");
             }
+        }
+
+        private void DisplayTransactionCompleteScreen()
+        {
+            LogEvents($"Processing  : LABEL1=<Transaction complete.>Label2=<Thank you.>");
+
+            DisplayDescription(1, string.Empty, 10, string.Empty, 0, "", 25, string.Empty, 0);
+            DisplayDescription(2, string.Empty, 0, string.Empty, 10, "", 25, string.Empty, 0);
+            DisplayDescription(3, string.Empty, 0, string.Empty, 0, "Transaction complete.", 25, string.Empty, 0);
+            DisplayDescription(4, string.Empty, 0, string.Empty, 0, string.Empty, 0, "Thank you.", 25);
+
+            timeoutTimer.Enabled = true;
+            timeoutTimer.Start();
         }
 
         public void UpdateCassetteStatus()
@@ -1352,7 +1424,7 @@ namespace FujitsuCDU
             {
                 LogEvents($"Processing  : LABEL1=<Dispensed ${DispensingAmount} of ${TotalAmount}>Label2=<Please take your cash>");
 
-                DisplayDescription(3, "", 0, "", 0, $"Dispensed ${DispensingAmount} of ${TotalAmount}", 20, "", 0);
+                DisplayDescription(3, "", 0, "", 0, $"Dispensed ${DispensingAmount} of ${TotalAmount}", 25, "", 0);
                 DisplayDescription(4, "", 0, "", 0, "", 0, "Please take your cash", 20);
 
                 //timeoutTimer.Enabled = true;
@@ -1401,7 +1473,7 @@ namespace FujitsuCDU
             {
                 S = receivedMessage.Substring(4, receivedMessage.Length - 8);
 
-                LogEvents($"Dev 99 : Processing ");
+                LogEvents($"Processing ");
                 var receivedBytes = utilities.GetSendBytes(S);
                 utilities.SplitBytes(receivedBytes, 16); // Write detailed information into Log file.
                 var crcChecksumByte = new byte[2];
@@ -1445,7 +1517,7 @@ namespace FujitsuCDU
                         {
                             (lblInitial1 as Label).Text = string.Empty;
                             (lblInitial1 as Label).Text = message;
-                            (lblInitial1 as Label).Font = new Font("Calibri", size1, FontStyle.Regular);
+                            (lblInitial1 as Label).Font = new Font("Calibri", size1, FontStyle.Bold);
                             (lblInitial1 as Label).SetBounds(((pnlInitialize as Panel).ClientSize.Width - (lblInitial1 as Label).Width) / 2, ((pnlInitialize as Panel).ClientSize.Height - (lblInitial1 as Label).Height) / 2, 0, 0, BoundsSpecified.Location);
 
                         });
@@ -1454,7 +1526,7 @@ namespace FujitsuCDU
                     break;
                 case 2:
                     var lblInitial2 = Controls.Find("lblInitial2", true).FirstOrDefault();
-                    var pnlInitialize2 = Controls.Find("pnlInitialize2", true).FirstOrDefault();
+                    var pnlInitialize2 = Controls.Find("pnlInitailize2", true).FirstOrDefault();
 
                     if (null != lblInitial2 && lblInitial2 is Label && null != pnlInitialize2 && pnlInitialize2 is Panel)
                     {
@@ -1462,9 +1534,9 @@ namespace FujitsuCDU
                         BeginInvoke((Action)delegate ()
                         {
                             (lblInitial2 as Label).Text = string.Empty;
-                            (lblInitial2 as Label).Text = message;
+                            (lblInitial2 as Label).Text = message2;
                             (lblInitial2 as Label).Font = new Font("Calibri", size2, FontStyle.Regular);
-                            (lblInitial2 as Label).SetBounds(((pnlInitialize2 as Panel).ClientSize.Width - (lblInitial2 as Label).Width) / 2, (((pnlInitialize2 as Panel).ClientSize.Height - (lblInitial2 as Label).Height) / 2) - 40, 0, 0, BoundsSpecified.Location);
+                            (lblInitial2 as Label).SetBounds(((pnlInitialize2 as Panel).ClientSize.Width - (lblInitial2 as Label).Width) / 2, (((pnlInitialize2 as Panel).ClientSize.Height - (lblInitial2 as Label).Height) / 2) - 10, 0, 0, BoundsSpecified.Location);
 
                         });
 
@@ -1501,7 +1573,7 @@ namespace FujitsuCDU
                             (lblMessage2 as Label).Text = string.Empty;
                             (lblMessage2 as Label).Text = message4;
                             (lblMessage2 as Label).Font = new Font("Calibri", size4, FontStyle.Regular);
-                            (lblMessage2 as Label).SetBounds(((pnlMessage2 as Panel).ClientSize.Width - (lblMessage2 as Label).Width) / 2, (((pnlMessage2 as Panel).ClientSize.Height - (lblMessage2 as Label).Height) / 2) - 40, 0, 0, BoundsSpecified.Location);
+                            (lblMessage2 as Label).SetBounds(((pnlMessage2 as Panel).ClientSize.Width - (lblMessage2 as Label).Width) / 2, (((pnlMessage2 as Panel).ClientSize.Height - (lblMessage2 as Label).Height) / 2) - 30, 0, 0, BoundsSpecified.Location);
 
                         });
 
@@ -1518,17 +1590,17 @@ namespace FujitsuCDU
                     {
 
                         BeginInvoke((Action)delegate ()
-                       {
-                           (Initial1 as Label).Text = string.Empty;
-                           (Initial2 as Label).Text = string.Empty;
-                           (Message2 as Label).Text = string.Empty;
+                        {
+                            (Initial1 as Label).Text = string.Empty;
+                            (Initial2 as Label).Text = string.Empty;
+                            (Message2 as Label).Text = string.Empty;
 
-                           (Message1 as Label).Text = message3;
-                           (Message1 as Label).Font = new Font("Calibri", size3, FontStyle.Italic);
-                           (Message1 as Label).SetBounds(((pnlMessage1 as Panel).ClientSize.Width - (Message1 as Label).Width) / 2, ((pnlMessage1 as Panel).ClientSize.Height - (Message1 as Label).Height) / 2, 0, 0, BoundsSpecified.Location);
+                            (Message1 as Label).Text = message3;
+                            (Message1 as Label).Font = new Font("Calibri", size3, FontStyle.Italic);
+                            (Message1 as Label).SetBounds(((pnlMessage1 as Panel).ClientSize.Width - (Message1 as Label).Width) / 2, ((pnlMessage1 as Panel).ClientSize.Height - (Message1 as Label).Height) / 2, 0, 0, BoundsSpecified.Location);
 
 
-                       });
+                        });
 
                     }
                     break;
@@ -1547,7 +1619,9 @@ namespace FujitsuCDU
 
         private void TimeOutEvent(object source, ElapsedEventArgs e)
         {
-            DisplayDescription(5, "", 0, "", 0, "Please scan the barcode", 20, "", 0);
+            DisplayDescription(5, "", 0, "", 0, "Please scan the barcode", 25, "", 0);
+            DisplayDescription(1, WelcomeScreen1, 50, "", 0, "", 25, "", 0);
+            DisplayDescription(2, "", 0, WelcomeScreen2, 30, "", 25, "", 0);
             timeoutTimer.Stop();
             timeoutTimer.Enabled = false;
             IsProcessCompleted = true;
@@ -1572,8 +1646,8 @@ namespace FujitsuCDU
                         (lblInitial2 as Label).Text = string.Empty;
                     });
 
-                    DisplayDescription(3, "", 20, "", 20, "Invalid Card", 20, "", 20);
-                    DisplayDescription(4, "", 20, "", 20, "", 0, "Transaction cancelled.", 20);
+                    DisplayDescription(3, "", 20, "", 20, "Invalid Card", 25, "", 25);
+                    DisplayDescription(4, "", 20, "", 20, "", 0, "Transaction cancelled.", 25);
 
                     timeoutTrans.Stop();
                     timeoutTrans.Enabled = false;
@@ -1587,6 +1661,28 @@ namespace FujitsuCDU
                 LogEvents($"Exception at TimeOutTransaction {ex.Message }");
             }
         }
+
+        private void TimeOutTransactionForCoins()
+        {
+            try
+            {
+                LogEvents($"Processing  : LABEL1=<{"Transaction timed out"}>Label2=<Transaction cancelled>");
+
+                DisplayDescription(1, string.Empty, 10, string.Empty, 0, "", 25, string.Empty, 0);
+                DisplayDescription(2, string.Empty, 0, string.Empty, 10, "", 25, string.Empty, 0);
+                DisplayDescription(3, "", 20, "", 20, "Transaction timed out", 25, "", 25);
+                DisplayDescription(4, "", 20, "", 20, "", 0, "Transaction cancelled.", 25);
+
+                timeoutTimer.Enabled = true;
+                timeoutTimer.Start();
+
+            }
+            catch (Exception ex)
+            {
+                LogEvents($"Exception at TimeOutTransactionForCoins {ex.Message }");
+            }
+        }
+
 
         public async Task ProcessBarcode(string barcode)
         {
@@ -1616,8 +1712,7 @@ namespace FujitsuCDU
                 {
                     var dispenseMessage = ezResponse.Split('.')[4].Replace("\u001d", "");
                     DispensingMessage = dispenseMessage;
-                    var originalAmount = ezResponse.Split('.')[5].Replace("\u001d", "");
-                    var dispensingAmount = ezResponse.Split('.')[6].Replace("\u001d", "");
+
                     LogEvents($"Received Socket Dispense response : {dispenseMessage}");
 
 
@@ -1625,13 +1720,36 @@ namespace FujitsuCDU
                     timeoutTrans.Enabled = false;
                     if (Convert.ToInt64(dispenseMessage) != 0)
                     {
+                        var originalAmount = string.Empty;
+                        var dispensingAmount = string.Empty;
+                        if (ezResponse.Split('.').Length > 8)
+                        {
+                            originalAmount = ezResponse.Split('.')[6].Replace("\u001d", "") + '.' + ezResponse.Split('.')[7].Replace("\u001d", "");
+                            dispensingAmount = ezResponse.Split('.')[5].Replace("\u001d", "");
+
+                        }
+                        else
+                        {
+                            originalAmount = ezResponse.Split('.')[6].Replace("\u001d", "");
+                            dispensingAmount = ezResponse.Split('.')[5].Replace("\u001d", "");
+
+                        }
+
                         DispenseAmount(dispensingAmount, originalAmount, dispenseMessage.SplitInParts(2).ToArray());
                     }
                     else
                     {
-                        LogEvents($"Processing  : LABEL1=<{"Invalid Card"}>Label2=<Transaction cancelled.>");
-                        DisplayDescription(3, "", 20, "", 20, "Invalid Card", 20, "", 20);
-                        DisplayDescription(4, "", 20, "", 20, "", 0, "Transaction cancelled.", 20);
+                        ezResponse = ezResponse.TrimEnd(new Char[] { '.' });
+                        var message = ezResponse.Split('.')[ezResponse.Substring(0, ezResponse.Length - 2).Split('.').Length - 1].Remove(0, 1);
+                        var code = ezResponse.Substring(0, ezResponse.Length - 2).Split('.')[ezResponse.Substring(0, ezResponse.Length - 2).Split('.').Length - 2];
+
+
+                        //LogEvents($"Processing  : LABEL1=<{"Invalid Card"}>Label2=<Transaction cancelled.>");
+                        LogEvents($"Processing  : LABEL1=<{message}>Label2=<Transaction cancelled.>");
+                        DisplayDescription(1, "", 10, "", 20, "", 25, "", 20);
+                        DisplayDescription(2, "", 10, "", 20, "", 25, "", 20);
+                        DisplayDescription(3, "", 20, "", 20, message, 25, "", 20);
+                        DisplayDescription(4, "", 20, "", 20, "", 0, "Transaction cancelled.", 25);
 
                         timeoutTimer.Enabled = true;
                         timeoutTimer.Start();
@@ -1641,6 +1759,10 @@ namespace FujitsuCDU
                 catch (Exception ex)
                 {
                     LogEvents($"ProcessBarcodeTransaction {ex.Message} ");
+                    timeoutTrans.Enabled = true;
+                    timeoutTrans.Start();
+
+
                 }
             });
         }
@@ -1698,23 +1820,23 @@ namespace FujitsuCDU
                                     if (pnlCasette2 != null && pnlCasstteStatus != null && pnlCasette2 is Panel && pnlCasstteStatus is Panel)
                                     {
                                         BeginInvoke((Action)delegate ()
-                                       {
-                                           pnlCasette2.SetBounds(40, (pnlCasstteStatus.ClientSize.Height - pnlCasette2.Height) / 2, 0, 0, BoundsSpecified.Location);
-                                           pnlCasette2.Visible = true;
-                                           switch (item.status)
-                                           {
-                                               case "0":
-                                                   pnlCasette2.BackColor = Color.Green;
-                                                   break;
-                                               case "2":
-                                                   pnlCasette2.BackColor = Color.Red;
-                                                   break;
-                                               case "4":
-                                                   pnlCasette2.BackColor = Color.Yellow;
-                                                   break;
+                                        {
+                                            pnlCasette2.SetBounds(40, (pnlCasstteStatus.ClientSize.Height - pnlCasette2.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                            pnlCasette2.Visible = true;
+                                            switch (item.status)
+                                            {
+                                                case "0":
+                                                    pnlCasette2.BackColor = Color.Green;
+                                                    break;
+                                                case "2":
+                                                    pnlCasette2.BackColor = Color.Red;
+                                                    break;
+                                                case "4":
+                                                    pnlCasette2.BackColor = Color.Yellow;
+                                                    break;
 
-                                           }
-                                       });
+                                            }
+                                        });
                                     }
 
                                     break;
@@ -1723,23 +1845,23 @@ namespace FujitsuCDU
                                     if (pnlCasette3 != null && pnlCasstteStatus != null && pnlCasette3 is Panel && pnlCasstteStatus is Panel)
                                     {
                                         BeginInvoke((Action)delegate ()
-                                       {
-                                           pnlCasette3.SetBounds(70, (pnlCasstteStatus.ClientSize.Height - pnlCasette3.Height) / 2, 0, 0, BoundsSpecified.Location);
-                                           pnlCasette3.Visible = true;
-                                           switch (item.status)
-                                           {
-                                               case "0":
-                                                   pnlCasette3.BackColor = Color.Green;
-                                                   break;
-                                               case "2":
-                                                   pnlCasette3.BackColor = Color.Red;
-                                                   break;
-                                               case "4":
-                                                   pnlCasette3.BackColor = Color.Yellow;
-                                                   break;
+                                        {
+                                            pnlCasette3.SetBounds(70, (pnlCasstteStatus.ClientSize.Height - pnlCasette3.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                            pnlCasette3.Visible = true;
+                                            switch (item.status)
+                                            {
+                                                case "0":
+                                                    pnlCasette3.BackColor = Color.Green;
+                                                    break;
+                                                case "2":
+                                                    pnlCasette3.BackColor = Color.Red;
+                                                    break;
+                                                case "4":
+                                                    pnlCasette3.BackColor = Color.Yellow;
+                                                    break;
 
-                                           }
-                                       });
+                                            }
+                                        });
                                     }
 
                                     break;
@@ -1748,23 +1870,23 @@ namespace FujitsuCDU
                                     if (pnlCasette4 != null && pnlCasstteStatus != null && pnlCasette4 is Panel && pnlCasstteStatus is Panel)
                                     {
                                         BeginInvoke((Action)delegate ()
-                                       {
-                                           pnlCasette4.SetBounds(100, (pnlCasstteStatus.ClientSize.Height - pnlCasette4.Height) / 2, 0, 0, BoundsSpecified.Location);
-                                           pnlCasette4.Visible = true;
-                                           switch (item.status)
-                                           {
-                                               case "0":
-                                                   pnlCasette4.BackColor = Color.Green;
-                                                   break;
-                                               case "2":
-                                                   pnlCasette4.BackColor = Color.Red;
-                                                   break;
-                                               case "4":
-                                                   pnlCasette4.BackColor = Color.Yellow;
-                                                   break;
+                                        {
+                                            pnlCasette4.SetBounds(100, (pnlCasstteStatus.ClientSize.Height - pnlCasette4.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                            pnlCasette4.Visible = true;
+                                            switch (item.status)
+                                            {
+                                                case "0":
+                                                    pnlCasette4.BackColor = Color.Green;
+                                                    break;
+                                                case "2":
+                                                    pnlCasette4.BackColor = Color.Red;
+                                                    break;
+                                                case "4":
+                                                    pnlCasette4.BackColor = Color.Yellow;
+                                                    break;
 
-                                           }
-                                       });
+                                            }
+                                        });
                                     }
 
                                     break;
@@ -1773,23 +1895,23 @@ namespace FujitsuCDU
                                     if (pnlCasette5 != null && pnlCasstteStatus != null && pnlCasette5 is Panel && pnlCasstteStatus is Panel)
                                     {
                                         BeginInvoke((Action)delegate ()
-                                       {
-                                           pnlCasette5.SetBounds(130, (pnlCasstteStatus.ClientSize.Height - pnlCasette5.Height) / 2, 0, 0, BoundsSpecified.Location);
-                                           pnlCasette5.Visible = true;
-                                           switch (item.status)
-                                           {
-                                               case "0":
-                                                   pnlCasette5.BackColor = Color.Green;
-                                                   break;
-                                               case "2":
-                                                   pnlCasette5.BackColor = Color.Red;
-                                                   break;
-                                               case "4":
-                                                   pnlCasette5.BackColor = Color.Yellow;
-                                                   break;
+                                        {
+                                            pnlCasette5.SetBounds(130, (pnlCasstteStatus.ClientSize.Height - pnlCasette5.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                            pnlCasette5.Visible = true;
+                                            switch (item.status)
+                                            {
+                                                case "0":
+                                                    pnlCasette5.BackColor = Color.Green;
+                                                    break;
+                                                case "2":
+                                                    pnlCasette5.BackColor = Color.Red;
+                                                    break;
+                                                case "4":
+                                                    pnlCasette5.BackColor = Color.Yellow;
+                                                    break;
 
-                                           }
-                                       });
+                                            }
+                                        });
                                     }
 
                                     break;
@@ -1798,23 +1920,23 @@ namespace FujitsuCDU
                                     if (pnlCasette6 != null && pnlCasstteStatus != null && pnlCasette6 is Panel && pnlCasstteStatus is Panel)
                                     {
                                         BeginInvoke((Action)delegate ()
-                                       {
-                                           pnlCasette6.SetBounds(160, (pnlCasstteStatus.ClientSize.Height - pnlCasette6.Height) / 2, 0, 0, BoundsSpecified.Location);
-                                           pnlCasette6.Visible = true;
-                                           switch (item.status)
-                                           {
-                                               case "0":
-                                                   pnlCasette6.BackColor = Color.Green;
-                                                   break;
-                                               case "2":
-                                                   pnlCasette6.BackColor = Color.Red;
-                                                   break;
-                                               case "4":
-                                                   pnlCasette6.BackColor = Color.Yellow;
-                                                   break;
+                                        {
+                                            pnlCasette6.SetBounds(160, (pnlCasstteStatus.ClientSize.Height - pnlCasette6.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                            pnlCasette6.Visible = true;
+                                            switch (item.status)
+                                            {
+                                                case "0":
+                                                    pnlCasette6.BackColor = Color.Green;
+                                                    break;
+                                                case "2":
+                                                    pnlCasette6.BackColor = Color.Red;
+                                                    break;
+                                                case "4":
+                                                    pnlCasette6.BackColor = Color.Yellow;
+                                                    break;
 
-                                           }
-                                       });
+                                            }
+                                        });
                                     }
 
                                     break;
@@ -1823,12 +1945,12 @@ namespace FujitsuCDU
                                     if (pnlCasette7 != null && pnlCasstteStatus != null && pnlCasette7 is Panel && pnlCasstteStatus is Panel)
                                     {
                                         BeginInvoke((Action)delegate ()
-                                       {
-                                           pnlCasette7.SetBounds(190, (pnlCasstteStatus.ClientSize.Height - pnlCasette7.Height) / 2, 0, 0, BoundsSpecified.Location);
-                                           pnlCasette7.BackColor = Color.Red;
-                                           pnlCasette7.Visible = true;
+                                        {
+                                            pnlCasette7.SetBounds(190, (pnlCasstteStatus.ClientSize.Height - pnlCasette7.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                            pnlCasette7.BackColor = Color.Red;
+                                            pnlCasette7.Visible = true;
 
-                                       });
+                                        });
                                     }
 
 
@@ -1838,12 +1960,12 @@ namespace FujitsuCDU
                                     if (pnlCasette8 != null && pnlCasstteStatus != null && pnlCasette8 is Panel && pnlCasstteStatus is Panel)
                                     {
                                         BeginInvoke((Action)delegate ()
-                                       {
-                                           pnlCasette8.SetBounds(220, (pnlCasstteStatus.ClientSize.Height - pnlCasette8.Height) / 2, 0, 0, BoundsSpecified.Location);
-                                           pnlCasette8.BackColor = Color.Red;
-                                           pnlCasette8.Visible = true;
+                                        {
+                                            pnlCasette8.SetBounds(220, (pnlCasstteStatus.ClientSize.Height - pnlCasette8.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                            pnlCasette8.BackColor = Color.Red;
+                                            pnlCasette8.Visible = true;
 
-                                       });
+                                        });
                                     }
 
 
@@ -1867,33 +1989,33 @@ namespace FujitsuCDU
                         if (pnlCasette1 != null && pnlCasette2 != null && pnlCasette3 != null && pnlCasette4 != null && pnlCasette5 != null && pnlCasette6 != null && pnlCasette7 != null && pnlCasette8 != null && pnlCasstteStatus != null && pnlCasette1 is Panel && pnlCasstteStatus is Panel)
                         {
                             BeginInvoke((Action)delegate ()
-                           {
-                               pnlCasette1.SetBounds(10, (pnlCasstteStatus.ClientSize.Height - pnlCasette1.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette1.Visible = true;
-                               pnlCasette1.BackColor = Color.Red;
-                               pnlCasette2.SetBounds(40, (pnlCasstteStatus.ClientSize.Height - pnlCasette2.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette2.Visible = true;
-                               pnlCasette2.BackColor = Color.Red;
-                               pnlCasette3.SetBounds(70, (pnlCasstteStatus.ClientSize.Height - pnlCasette3.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette3.Visible = true;
-                               pnlCasette3.BackColor = Color.Red;
-                               pnlCasette4.SetBounds(100, (pnlCasstteStatus.ClientSize.Height - pnlCasette4.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette4.Visible = true;
-                               pnlCasette4.BackColor = Color.Red;
-                               pnlCasette5.SetBounds(130, (pnlCasstteStatus.ClientSize.Height - pnlCasette5.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette5.Visible = true;
-                               pnlCasette5.BackColor = Color.Red;
-                               pnlCasette6.SetBounds(160, (pnlCasstteStatus.ClientSize.Height - pnlCasette6.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette6.Visible = true;
-                               pnlCasette6.BackColor = Color.Red;
-                               pnlCasette7.SetBounds(190, (pnlCasstteStatus.ClientSize.Height - pnlCasette7.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette7.Visible = true;
-                               pnlCasette7.BackColor = Color.Red;
-                               pnlCasette8.SetBounds(220, (pnlCasstteStatus.ClientSize.Height - pnlCasette8.Height) / 2, 0, 0, BoundsSpecified.Location);
-                               pnlCasette8.Visible = true;
-                               pnlCasette8.BackColor = Color.Red;
+                            {
+                                pnlCasette1.SetBounds(10, (pnlCasstteStatus.ClientSize.Height - pnlCasette1.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette1.Visible = true;
+                                pnlCasette1.BackColor = Color.Red;
+                                pnlCasette2.SetBounds(40, (pnlCasstteStatus.ClientSize.Height - pnlCasette2.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette2.Visible = true;
+                                pnlCasette2.BackColor = Color.Red;
+                                pnlCasette3.SetBounds(70, (pnlCasstteStatus.ClientSize.Height - pnlCasette3.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette3.Visible = true;
+                                pnlCasette3.BackColor = Color.Red;
+                                pnlCasette4.SetBounds(100, (pnlCasstteStatus.ClientSize.Height - pnlCasette4.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette4.Visible = true;
+                                pnlCasette4.BackColor = Color.Red;
+                                pnlCasette5.SetBounds(130, (pnlCasstteStatus.ClientSize.Height - pnlCasette5.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette5.Visible = true;
+                                pnlCasette5.BackColor = Color.Red;
+                                pnlCasette6.SetBounds(160, (pnlCasstteStatus.ClientSize.Height - pnlCasette6.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette6.Visible = true;
+                                pnlCasette6.BackColor = Color.Red;
+                                pnlCasette7.SetBounds(190, (pnlCasstteStatus.ClientSize.Height - pnlCasette7.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette7.Visible = true;
+                                pnlCasette7.BackColor = Color.Red;
+                                pnlCasette8.SetBounds(220, (pnlCasstteStatus.ClientSize.Height - pnlCasette8.Height) / 2, 0, 0, BoundsSpecified.Location);
+                                pnlCasette8.Visible = true;
+                                pnlCasette8.BackColor = Color.Red;
 
-                           });
+                            });
 
                         }
                         LogEvents($"ProcessCassetteStatus {ex.Message} ");
@@ -1925,13 +2047,13 @@ namespace FujitsuCDU
                 if (lblInitial1 != null && lblInitial1 is Label && lblInitial2 != null && lblInitial2 is Label && lblMessage1 != null && lblMessage1 is Label && lblMessage2 != null && lblMessage2 is Label)
                 {
                     BeginInvoke((Action)delegate ()
-                   {
-                       lblInitial1.Text = string.Empty;
-                       lblInitial2.Text = string.Empty;
-                       lblMessage1.Text = "Sorry, Dispenser is temporarily out of service.";
-                       lblMessage1.SetBounds((pnlMessage.ClientSize.Width - lblMessage1.Width) / 2, (pnlMessage.ClientSize.Height - lblMessage1.Height) / 2, 0, 0, BoundsSpecified.Location);
-                       lblMessage2.Text = string.Empty;
-                   });
+                    {
+                        lblInitial1.Text = string.Empty;
+                        lblInitial2.Text = string.Empty;
+                        lblMessage1.Text = "Sorry, Dispenser is temporarily out of service.";
+                        lblMessage1.SetBounds((pnlMessage.ClientSize.Width - lblMessage1.Width) / 2, (pnlMessage.ClientSize.Height - lblMessage1.Height) / 2, 0, 0, BoundsSpecified.Location);
+                        lblMessage2.Text = string.Empty;
+                    });
                 }
                 SendSocketMessage($"0022.000..9");
             });
@@ -1990,7 +2112,7 @@ namespace FujitsuCDU
                     int bytesRead = clientStream.Read(bytesToRead, 0, ezCashclient.ReceiveBufferSize);
                     var ezCashResponse = utilities.ByteToHexaEZCash(bytesToRead.Skip(2).Take(bytesRead).ToArray(), bytesRead).Split(',');
                     WelcomeScreen1 = ezCashResponse[0];
-                    WelcomeScreen2 = ezCashResponse[1];
+                    WelcomeScreen2 = ezCashResponse[1].Replace(".", "");
 
                     listenThread = new Thread(ReceiveMessage);
                     listenThread.Start();
@@ -2133,6 +2255,16 @@ namespace FujitsuCDU
 
                         }
                         break;
+                    case string a when a.Contains("30"):
+                    case string b when b.Contains("30."):
+                        LogEvents($"Success coin dispense response.");
+                        DisplayTransactionCompleteScreen();
+                        break;
+                    case string a when a.Contains("31"):
+                    case string b when b.Contains("31."):
+                        LogEvents($"Failure coin dispense response.");
+                        TimeOutTransactionForCoins();
+                        break;
                     default:
                         LogEvents($"Parsing Cassette status details.");
                         await ProcessCassetteStatus(ezCashMessage);
@@ -2166,7 +2298,7 @@ namespace FujitsuCDU
                             lblMessage2.Text = string.Empty;
                             (lblMessage1 as Label).Text = string.Empty;
                             (lblMessage1 as Label).Text = message;
-                            (lblMessage1 as Label).Font = new Font("Calibri", 20, FontStyle.Regular);
+                            (lblMessage1 as Label).Font = new Font("Calibri", 25, FontStyle.Regular);
                             (lblMessage1 as Label).SetBounds(((pnlMessage as Panel).ClientSize.Width - (lblMessage1 as Label).Width) / 2, ((pnlMessage as Panel).ClientSize.Height - (lblMessage1 as Label).Height) / 2, 0, 0, BoundsSpecified.Location);
 
                         });
