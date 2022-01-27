@@ -9,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -2102,9 +2103,24 @@ namespace FujitsuCDU
         {
             try
             {
+
+
                 string SERVER_IP = serviceConfiguration.GetFileLocation("EZcashIP");
-                ezCashclient = new TcpClient(SERVER_IP, Convert.ToInt32(serviceConfiguration.GetFileLocation("EZcashPort")));
+                string local_IP = serviceConfiguration.GetFileLocation("Ip");
+
+                IPAddress localIP = IPAddress.Parse(local_IP);
+                int localPort = Convert.ToInt32(serviceConfiguration.GetFileLocation("Port"));
+                IPAddress remoteIP = IPAddress.Parse(SERVER_IP);
+                int remotePort = Convert.ToInt32(serviceConfiguration.GetFileLocation("EZcashPort"));
+                IPEndPoint remoteEP = new IPEndPoint(remoteIP, remotePort);
+                IPEndPoint localEP = new IPEndPoint(localIP, localPort);
+
+
+                //ezCashclient = new TcpClient(SERVER_IP, Convert.ToInt32(serviceConfiguration.GetFileLocation("EZcashPort")));
+                ezCashclient = new TcpClient(localEP);
+                ezCashclient.Connect(remoteEP);
                 clientStream = ezCashclient.GetStream();
+
                 Thread.Sleep(5000);
                 if (ezCashclient.Connected)
                 {
