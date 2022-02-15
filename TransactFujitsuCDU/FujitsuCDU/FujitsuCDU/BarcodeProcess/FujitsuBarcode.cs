@@ -14,7 +14,7 @@ namespace FujitsuCDU.BarcodeProcess
         static string cassetteCount = string.Empty;
         static readonly List<string> dispensedCoin = new List<string>();
         static readonly List<int> dispenseonFirstTry = new List<int>();
-        readonly Logger logger = new Logger();
+        //readonly Logger logger = new Logger();
         readonly Utilities utilities = new Utilities();
         readonly API api = new API();
         readonly ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
@@ -32,7 +32,7 @@ namespace FujitsuCDU.BarcodeProcess
             {
                 try
                 {
-                    Logger.LogWithNoLock($"Sending Socket transaction request {barcode}..");
+                    Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: Sending Socket transaction request {barcode}..");
                     cduProcessor.CommState = FujitsuCDUProcessor.TCommState.csReady;
                     cduProcessor.IsDispenseReqSent = true;
                     cduProcessor.State = FujitsuCDUProcessor.TState.stWaitTranReply;
@@ -41,7 +41,7 @@ namespace FujitsuCDU.BarcodeProcess
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogWithNoLock($"ParseBarcodeMessage {ex.Message} ");
+                    Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: ParseBarcodeMessage {ex.Message} ");
                 }
             });
         }
@@ -50,13 +50,13 @@ namespace FujitsuCDU.BarcodeProcess
         {
             try
             {
-                Logger.LogWithNoLock($"Sending Socket response..");
+                Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: Sending Socket response..");
                 var message = "1111.000...1 > .097846993..ABC....";
                 cduProcessor.ezcashSocket.SendMessage(message);
             }
             catch (Exception ex)
             {
-                Logger.LogWithNoLock($"SendSocketResponse {ex.Message} ");
+                Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: SendSocketResponse {ex.Message} ");
             }
         }
 

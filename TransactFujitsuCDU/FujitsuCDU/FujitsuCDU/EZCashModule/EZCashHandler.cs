@@ -11,7 +11,7 @@ namespace FujitsuCDU.EZCashModule
 {
     public class EZCashHandler
     {
-        private readonly Logger logger = new Logger();
+        //private readonly Logger logger = new Logger();
         Utilities utilities = new Utilities();
         public Thread listenThread;
         TcpClient client = new TcpClient("192.168.254.18", 3450);
@@ -99,7 +99,7 @@ namespace FujitsuCDU.EZCashModule
 
         private void LogEvents(string input)
         {
-            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{input}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: {input}");
         }
     }
 }

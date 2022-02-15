@@ -2329,7 +2329,7 @@ namespace FujitsuCDU
 
         private void LogEvents(string input)
         {
-            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}: {input}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: {input}");
         }
 
 

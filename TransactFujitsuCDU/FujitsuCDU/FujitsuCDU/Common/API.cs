@@ -14,7 +14,7 @@ namespace FujitsuCDU.Common
     public class API
     {
         private readonly ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
-        private readonly Logger logger = new Logger();
+        //private readonly Logger logger = new Logger();
         public T GetRequest<T>(string param, string devId, out bool databaseError)
         {
             string responseBody = string.Empty;
@@ -65,14 +65,14 @@ namespace FujitsuCDU.Common
             catch (HttpRequestException ex)
             {
                 databaseError = true;
-                LogEvents($"There was an error while trying to access the database. Parameters : {param} , Exception : {ex.Message}");
+                LogEvents($"HttpRequest Exception. Parameters : {param} , Exception : {ex.Message}");
                 return JsonConvert.DeserializeObject<T>(responseBody);
 
             }
             catch (TaskCanceledException ex)
             {
                 databaseError = true;
-                LogEvents($"There was an error while trying to access the database. Parameters : {param} , Exception : {ex.Message}");
+                LogEvents($"Task cancelled Exception. Parameters : {param} , Exception : {ex.Message}");
                 return JsonConvert.DeserializeObject<T>(responseBody);
 
             }
@@ -121,14 +121,14 @@ namespace FujitsuCDU.Common
             catch (HttpRequestException ex)
             {
                 databaseError = true;
-                LogEvents($"There was an error while trying to access the database. Parameters : {param} , Exception : {ex.Message}");
+                LogEvents($"HttpRequest Exception. Parameters : {param} , Exception : {ex.Message}");
                 return JsonConvert.DeserializeObject<T>(responseBody);
 
             }
             catch (TaskCanceledException ex)
             {
                 databaseError = true;
-                LogEvents($"There was an error while trying to access the database. Parameters : {param} , Exception : {ex.Message}");
+                LogEvents($"Task cancelled Exception. Parameters : {param} , Exception : {ex.Message}");
                 return JsonConvert.DeserializeObject<T>(responseBody);
 
             }
@@ -176,14 +176,14 @@ namespace FujitsuCDU.Common
             catch (HttpRequestException ex)
             {
                 databaseError = true;
-                LogEvents($"There was an error while trying to access the database. Parameters : {param} , Exception : {ex.Message}");
+                LogEvents($"HttpRequest Exception. Parameters : {param} , Exception : {ex.Message}");
                 return JsonConvert.DeserializeObject<T>(responseBody);
 
             }
             catch (TaskCanceledException ex)
             {
                 databaseError = true;
-                LogEvents($"There was an error while trying to access the database. Parameters : {param} , Exception : {ex.Message}");
+                LogEvents($"Task cancelled Exception. Parameters : {param} , Exception : {ex.Message}");
                 return JsonConvert.DeserializeObject<T>(responseBody);
 
             }
@@ -200,7 +200,7 @@ namespace FujitsuCDU.Common
 
         private void LogEvents(string input)
         {
-            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{input}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: {input}");
         }
     }
 }

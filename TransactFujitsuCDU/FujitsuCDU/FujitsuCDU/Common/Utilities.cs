@@ -8,7 +8,7 @@ namespace FujitsuCDU
 {
     public class Utilities
     {
-        private readonly Logger logger = new Logger();
+        // private readonly Logger logger = new Logger();
         public string ByteToHexaEZCash(byte[] bytes, int sizeRead)
         {
             StringBuilder sb = new StringBuilder();
@@ -73,7 +73,7 @@ namespace FujitsuCDU
 
         private void LogEvents(string input)
         {
-            Logger.LogWithNoLock(input);
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: {input}");
         }
 
         public string ConvertHex(string hexString)

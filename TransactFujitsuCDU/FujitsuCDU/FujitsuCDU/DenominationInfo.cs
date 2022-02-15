@@ -10,7 +10,7 @@ namespace FujitsuCDU
 {
     public class DenominationInfo
     {
-        private readonly Logger logger = new Logger();
+        //private readonly Logger logger = new Logger();
         private readonly API api = new API();
 
         [JsonProperty(PropertyName = "denomination")]
@@ -62,7 +62,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss} : Dev {deviceId} : {ex.Message}");
+                Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: Dev {deviceId} : {ex.Message}");
                 return denoms;
             }
         }

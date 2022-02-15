@@ -16,7 +16,7 @@ namespace FujitsuCDU
 {
     public class FujitsuCDUProcessor
     {
-        readonly Logger logger = new Logger();
+        //readonly Logger logger = new Logger();
         Utilities utilities = new Utilities();
         CRC cRC = new CRC();
         SerialPort commPort;// = new SerialPort("COM7", 9600, Parity.Even, 8, StopBits.One);
@@ -826,7 +826,7 @@ namespace FujitsuCDU
 
         private void TraceMessage(string message)
         {
-            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{message}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}:{message}");
         }
 
         private void GetConfig()
