@@ -21,6 +21,7 @@ C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\System.Net.Http.Formatting.dll
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\Newtonsoft.Json.xml
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Release\System.Net.Http.Formatting.xml
+C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.SuggestedBindingRedirects.cache
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.exe.config
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.CDU.resources
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.Properties.Resources.resources
@@ -29,5 +30,3 @@ C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.CopyComplete
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.exe
 C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.pdb
-C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.AssemblyReference.cache
-C:\Users\araaf\source\repos\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Release\FujitsuCDU.csproj.SuggestedBindingRedirects.cache
