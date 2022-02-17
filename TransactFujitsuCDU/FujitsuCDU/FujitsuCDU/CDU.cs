@@ -25,8 +25,6 @@ namespace FujitsuCDU
 
         Thread initializeThread;
         Thread bgThread;
-        //FujitsuCDUProcessor cduProcessor;
-        //FujitsuBarcode fujitsuBarcode;
         public string descriptionLoad;
         private string _barcode = "";
         public BackgroundWorker backgroundWorker1;
@@ -36,7 +34,6 @@ namespace FujitsuCDU
         #endregion
 
 
-        // code refactoring starts..
         Utilities utilities = new Utilities();
         CRC cRC = new CRC();
         SerialPort commPort;// = new SerialPort("COM7", 9600, Parity.Even, 8, StopBits.One);
@@ -52,7 +49,6 @@ namespace FujitsuCDU
         public NetworkStream clientStream;
         public Thread listenThread;
         public System.Timers.Timer timeoutTrans = new System.Timers.Timer(1000 * 15);
-        // public System.Timers.Timer timeoutTransForCoins = new System.Timers.Timer(1000 * 15);
         public string WelcomeScreen1 = string.Empty;
         public string WelcomeScreen2 = string.Empty;
         //
@@ -64,31 +60,8 @@ namespace FujitsuCDU
         const string ACK = "06";
         const string NAK = "15";
         const string DLE = "10";
-        const string ReqStatus = "01";
-        const string ReqInit = "602";
-        const string ReqBillCount1 = "603";
-        const string ReqBillCount2 = "604";
-        const string ReqBillTransport = "685";
-        const string ReqBillRetrieval = "606";
-        const string ReqReadSensorLevel = "6026";
         public string[] canRequest = { "30", "B1", "B2", "33", "B4", "35", "36", "B7", "B8", "39" };
 
-        // Good Response DH0,DH1 (DH2=$FF)
-        const string StatusResp = "e01";
-        const string GoodInitResp = "e02";
-        const string GoodBillCountResp1 = "e03";
-        const string GoodBillCountResp2 = "e04";
-        const string BillsHalfway = "e85";
-        const string GoodBillTransport = "e06";
-        const string GoodBillRetrieval = "e07";
-        const string GoodReadSensorLevel = "e026";
-
-        // Negative Response Frame (DH2=$FF)
-        const string AbnormalInit = "f002";
-        const string AbnormalBillCount1 = "f003";
-        const string AbnormalBillCount2 = "f004";
-        const string AbnormalBillTransport = "f005";
-        const string AbnormalBillRetrieval = "f006";
         #endregion
 
         #region Variables
@@ -112,8 +85,6 @@ namespace FujitsuCDU
 
         public decimal TotalAmount = 0.0m;
         public decimal DispensingAmount = 0.0m;
-        //public CDU cdu;
-        //public CDU3 cdu;
         public CDU cdu;
         public List<Cannister> TheCan = new List<Cannister>(); // To hold the Transaction (error or success) details .
 
@@ -126,8 +97,6 @@ namespace FujitsuCDU
         public enum TErrorState { stCassetteError, stOtherError };
         public TErrorState errorState;
         #endregion
-
-        // code refactoring ends..       
 
         public string GetFileLocation(string name)
         {
@@ -161,20 +130,15 @@ namespace FujitsuCDU
                 {
                     if (IsProcessCompleted && SocketConnected)
                     {
-                        //if (InvokeRequired)
-                        //{
                         this.Invoke(new MethodInvoker(delegate
                         {
                             LogEvents($"Processing: SCREEN =< 1 > LABEL1 =< {WelcomeScreen1} > LABEL2 =< {WelcomeScreen2} >");
 
                             lblInitial1.Text = WelcomeScreen1;
                             lblInitial2.Text = WelcomeScreen2;
-                            if (descriptionLoad == "1")
-                                lblMessage1.Text = "Please scan the Barcode.";
-                            else if (descriptionLoad == "2")
-                                lblMessage1.Text = "Please scan the Barcode.";
-                            else if (descriptionLoad == "3")
-                                lblMessage1.Text = "Waiting for data in.";
+
+                            lblMessage1.Text = descriptionLoad;
+
                             lblMessage1.Font = new Font("Calibri", 30, FontStyle.Italic);
 
                             lblInitial1.SetBounds((pnlInitialize.ClientSize.Width - lblInitial1.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial1.Height) / 2, 0, 0, BoundsSpecified.Location);
@@ -185,9 +149,6 @@ namespace FujitsuCDU
 
                         }));
 
-                        //DisplayCassetteStatus();
-
-                        // }
 
                         bgThread = new Thread(() => DisplayCassetteStatus());
                         bgThread.Start();
@@ -236,7 +197,6 @@ namespace FujitsuCDU
                     this.Invoke(new MethodInvoker(delegate
                     {
                         lblInitial1.Text = string.Empty;
-                        //lblInitial1.SetBounds((pnlInitialize.ClientSize.Width - lblInitial1.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial1.Height) / 2, 0, 0, BoundsSpecified.Location);
 
                         lblInitial2.Text = string.Empty;
                         lblMessage1.Text = "Initializing Dispenser...";
@@ -256,7 +216,6 @@ namespace FujitsuCDU
 
                         Thread initCDU = new Thread(InitCDU);
                         initCDU.Start();
-                        // DisplayCassetteStatus();
                         break;
 
                     }
@@ -365,8 +324,6 @@ namespace FujitsuCDU
 
         private void DisplayErrorMessage()
         {
-            //if (InvokeRequired)
-            //{
             this.Invoke(new MethodInvoker(delegate
             {
                 lblMessage1.Text = "Sorry, Dispenser is temporarily out of service.";
@@ -375,7 +332,6 @@ namespace FujitsuCDU
 
 
             }));
-            //}
 
         }
 
@@ -387,30 +343,18 @@ namespace FujitsuCDU
                 {
 
                     case 1:
-                        //if (InvokeRequired)
-                        //{
                         this.Invoke(new MethodInvoker(delegate
                         {
                             lblMessage1.Text = message;// "CDU is Ready for dispensing.";
                             lblMessage1.Font = new Font("Calibri", 35, FontStyle.Regular);
                             lblInitial1.SetBounds((pnlInitialize.ClientSize.Width - lblInitial1.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial1.Height) / 2, 0, 0, BoundsSpecified.Location);
 
-                            //lblInitialize2.SetBounds((pnlInitialize.ClientSize.Width - lblInitialize2.Width) / 2,
-                            //    ((pnlInitialize.ClientSize.Height - lblInitialize2.Height) / 2) + 5, 0, 0, BoundsSpecified.Location);
-
                             lblMessage1.SetBounds((pnlMessage.ClientSize.Width - lblMessage1.Width) / 2, (pnlMessage.ClientSize.Height - lblMessage1.Height) / 2, 0, 0, BoundsSpecified.Location);
-                            //lblProcessMessage2.SetBounds((pnlMessage.ClientSize.Width - lblProcessMessage2.Width) / 2,
-                            //    ((pnlMessage.ClientSize.Height - lblProcessMessage2.Height) / 2) + 5, 0, 0, BoundsSpecified.Location);
 
 
                         }));
                         return;
-                    //}
-
-                    //break;
                     case 2:
-                        //if (InvokeRequired)
-                        //{
                         this.Invoke(new MethodInvoker(delegate
                         {
                             lblMessage1.Text = message;// "Dispensing $4000.00 out of $4500.00";
@@ -423,11 +367,7 @@ namespace FujitsuCDU
 
                         }));
                         return;
-                    //}
-                    //break;
                     case 3:
-                        //if (InvokeRequired)
-                        //{
                         this.Invoke(new MethodInvoker(delegate
                         {
                             lblMessage1.Text = message;// "Dispensed $4500.00 out of $4500.00";
@@ -440,11 +380,7 @@ namespace FujitsuCDU
 
                         }));
                         return;
-                    //}
-                    //break;
                     default:
-                        //if (InvokeRequired)
-                        //{
                         this.Invoke(new MethodInvoker(delegate
                         {
                             lblMessage1.Text = message;// "Waiting for data in...";
@@ -457,8 +393,6 @@ namespace FujitsuCDU
 
                         }));
                         return;
-                        //}
-                        //break;
                 }
             }
             catch (Exception ex)
@@ -480,7 +414,6 @@ namespace FujitsuCDU
                 {
                     if (!IsDown && !IsDisConnected)
                     {
-                        // _barcode = "097846993";
                         LogEvents($"Barcode Received : {_barcode}");
                         Thread cduDispense = new Thread(() => ProcessBarcodeAndDispense(_barcode));
                         cduDispense.Start();
@@ -528,11 +461,6 @@ namespace FujitsuCDU
                 LogEvents($"Exception at ProcessBarcodeAndDispense {ex.Message}");
             }
         }
-
-        //private void LogEvents(string message)
-        //{
-        //    LogEvents($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}:{message}");
-        //}
 
 
         public CDU()
@@ -612,8 +540,6 @@ namespace FujitsuCDU
                     ezCashclient = null;
                 }
 
-                //Application.ExitThread();
-                //Application.Exit();
                 Environment.Exit(1);
             }
             catch (Exception ex)
@@ -623,7 +549,6 @@ namespace FujitsuCDU
 
         }
 
-        // refactoring starts
 
         public void SendMessage(string message)
         {
@@ -697,13 +622,9 @@ namespace FujitsuCDU
 
                 sb.Append("6003ff00002cfedcba98");//DH0(60),DH1(03),DH2(FF), RSV1(00) , DH3(002C) ,0DR(fedcba98)
 
-                //msg = "$6003ff00002cfedcba98"; // This includes ODR.
 
                 for (int i = 0; i < 4; i++)
                 {
-                    //Cannisters[i].HostCycleCount := Cannisters[i].HostCycleCount + Cannisters[i].Dispensed;
-                    //{ inc( }
-                    //CurTran.CannDisp[Cannisters[i].ID] := CurTran.CannDisp[Cannisters[i].ID] + (Cannisters[i].Dispensed);
                     var divval = int.Parse(dispenseMessage[i]) / 10;
                     var modVal = int.Parse(dispenseMessage[i]) % 10;
                     sb.Append(canRequest[divval]); //CChar[Integer(Cannisters[i].Dispensed div 10)];
@@ -714,9 +635,6 @@ namespace FujitsuCDU
 
                 for (int i = 4; i < 6; i++)
                 {
-                    //Cannisters[i].HostCycleCount := Cannisters[i].HostCycleCount + Cannisters[i].Dispensed;
-                    //{ inc( }
-                    //CurTran.CannDisp[Cannisters[i].ID] := CurTran.CannDisp[Cannisters[i].ID] + (Cannisters[i].Dispensed);
                     var divval = int.Parse(dispenseMessage[i]) / 10;
                     var modVal = int.Parse(dispenseMessage[i]) % 10;
 
@@ -732,7 +650,6 @@ namespace FujitsuCDU
                 DispensingAmount = Convert.ToDecimal(amount);
                 State = TState.stWaitTranReply;
                 SendMessage(sb.ToString());
-                //cduProcessor.MsgWaiting = "6002ff00001a0003483a483a483a483a0d0d0d0d483a483a000000000d0d00001c";
 
 
             }
@@ -790,8 +707,6 @@ namespace FujitsuCDU
                 State = TState.stWaitReset;
                 devState = TDevState.stWaitReset;
                 SendMessage(Msg.ToString());
-                //SendMessage("6003ff00002cfedcba9830b1303030303030b1303030303030301500000030303030303030303030303030303030000000001c");
-                //SendMessage("6001ff000001001c");
             }
             catch (Exception ex)
             {
@@ -1039,7 +954,6 @@ namespace FujitsuCDU
                     return;
                 }
 
-                // ProcessInitResponse(message, messagebyte);
 
                 if (message.Substring(0, 1).ToUpper() == "F") //If the dispense fails, reject the notes and void. Else proceed with delivering the note.
                 {
@@ -1201,13 +1115,6 @@ namespace FujitsuCDU
                         case TErrorState.stCassetteError:
                             LogEvents($"Error code received , sending {Socketerrorcode} to EZcash socket");
                             SendSocketMessage(Socketerrorcode);
-                            //var ezResponse = ezcashSocket.ReceiveMessage();
-
-                            //var dispenseMessage = ezResponse.Split('.')[5].Replace("\u001d", "");
-
-                            //var originalAmount = ezResponse.Split('.')[6].Replace("\u001d", "");
-                            //var dispensingAmount = ezResponse.Split('.')[7].Replace("\u001d", "");
-                            //DispenseAmount(dispensingAmount, originalAmount, dispenseMessage.SplitInParts(2).ToArray());
                             break;
                         case TErrorState.stOtherError:
                             DispenseAmount(Convert.ToString(DispensingAmount), Convert.ToString(TotalAmount), DispensingMessage.SplitInParts(2).ToArray());
@@ -1221,8 +1128,6 @@ namespace FujitsuCDU
                     var cassetteRegister1 = work.Substring(42, 8).Trim().ToUpper();
                     var cassetteRegister2 = work.Substring(138, 8).Trim().ToUpper();
                     var canStatus = new StringBuilder();
-                    //var errorseverity = new StringBuilder();
-                    //canStatus.Append("0");
                     foreach (var cassette in cassetteRegister1.SplitInParts(2))
                     {
                         foreach (var item in cassette)
@@ -1262,35 +1167,10 @@ namespace FujitsuCDU
                             break;
                         }
                     }
-                    // Socketerrorcode = $"0022.000..8.E2000000000000.{canStatus}.0401500000000300000000.{errorseverity}";
                     SendSocketMessage($"0031.{canStatus}..9");
                     LogEvents($"Message to EZCash socket : {Socketerrorcode}");
                 }
-                //int i = 0;
-                //TCommonResp R = new TCommonResp();
-                //if (workbyte != null)
-                //{
-                //    R.DH0 = workbyte[0];
-                //    R.DH1 = workbyte[1];
-                //    R.DH2 = workbyte[2];
-                //    R.DH3 = new byte[] { workbyte[3], workbyte[4] };
-                //    R.ErrorCode = "";
-                //    R.CassetteRegister = new byte[] { workbyte[15], workbyte[16], workbyte[17], workbyte[18] };
-                //    R.CassetteRegister2 = new byte[] { workbyte[45], workbyte[46], workbyte[47], workbyte[48] };
 
-                //    LogEvents($"Entered ProcessInitResponse {work}");
-
-
-                //    for (int can = 0; can < 4; can++)
-                //    {
-                //        ProcessCassReg(can, R.CassetteRegister[can]);
-                //    }
-
-                //    for (int can = 4; can < 6; can++)
-                //    {
-                //        ProcessCassReg(can, R.CassetteRegister[can]);
-                //    }
-                //}
 
             }
             catch (Exception ex)
@@ -1344,14 +1224,6 @@ namespace FujitsuCDU
 
         public void UpdateCassetteStatus()
         {
-            //var message = "e0 03 ff 00 01 32 00 00 41 54 30 32 00 00 00 00 00 4a 3f 81 00 8b 0d 09 0e e8 48 3a 48 3a 48 3a 48 3a 0d 0d 0d 0d 00 00 00 00 30 36 31 30 32 33 41 54 30 32 30 31 00 00 00 00 00"
-            //   + "00 00 00 00 00 00 00 00 00 00 0a 8c 30 30 00 48 3a 48 3a 00 00 00 00 0d 0d 00 00 00 00 00 00 30 30 " +
-            //   "30 33 30 b1 30 b1 30 30 30 30 30 30 30 30 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 ff ff 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 ff ff 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 ff ff 00 00 " +
-            //   "00 00 00 00 00 00 00 00 00 00 ff 00 ff ff 00 30 30 30 33 30 b1 30 b1 b1 30 b1 30 b1 30 b1 30 15 15 15 15 e7 cf e7 e7 e7 ef ef e7 ef e7 d7 e7 e7 00 00 00 30 b1 30 b1 30" +
-            //   "30 30 30 30 30 30 30 30 30 30 30 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 ff ff 00 00 00 00 00 00 00 00 00 00 00 00 ff" +
-            //   "00 ff ff 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 ff ff 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 ff ff 00 30 b1 30 b1 30 30 30 30 b1 30 b1 30 b1 30 b1 30 15 15 15 15 fe dc ba 98 1c 10 03 78 bb"
-            //   ;
-            //SuccessDispenseMessage = message.Trim();
             var can1to4Status = SuccessDispenseMessage.Replace(" ", "").Substring(42, 8);
             var cassetteStatus = string.Empty;
             foreach (var item in can1to4Status.SplitInParts(2))
@@ -1376,24 +1248,6 @@ namespace FujitsuCDU
 
         }
 
-        //private void LogEvents(string message)
-        //{
-        //    LogEvents($"{DateTime.Now:MM-dd-yyyy HH:mm:ss}: {message}");
-        //}
-
-        private void GetConfig()
-        {
-            try
-            {
-                //SendMessage("0x6001FF000001001C");
-
-            }
-            catch (Exception ex)
-            {
-                LogEvents(ex.Message);
-            }
-        }
-
         private void OpenPort()
         {
             try
@@ -1414,11 +1268,6 @@ namespace FujitsuCDU
             }
         }
 
-        //public string GetFileLocation(string name)
-        //{
-        //    return ConfigurationManager.AppSettings[name];
-        //}
-
         private void DeliverAndWait()
         {
             try
@@ -1428,8 +1277,6 @@ namespace FujitsuCDU
                 DisplayDescription(3, "", 0, "", 0, $"Dispensed ${DispensingAmount} of ${TotalAmount}", 25, "", 0);
                 DisplayDescription(4, "", 0, "", 0, "", 0, "Please take your cash", 20);
 
-                //timeoutTimer.Enabled = true;
-                //timeoutTimer.Start();
                 SendMessage(RequestFrame.DeliverCash);
 
             }
@@ -1452,11 +1299,6 @@ namespace FujitsuCDU
             {
                 LogEvents($"Exception at RejectNote :{ex.Message}.");
             }
-        }
-
-        private void HandleErrorCode()
-        {
-
         }
 
         private void ProcessReadCassettes(string message)
@@ -1502,9 +1344,6 @@ namespace FujitsuCDU
 
         public void DisplayDescription(int ScreenNo, string message, int size1, string message2, int size2, string message3, int size3, string message4, int size4)
         {
-            //await Task.Run(() =>
-            //{
-
             switch (ScreenNo)
             {
                 case 1:
@@ -1609,12 +1448,6 @@ namespace FujitsuCDU
                     break;
 
             }
-
-
-            //}
-
-            //);
-
 
         }
 
@@ -1745,7 +1578,6 @@ namespace FujitsuCDU
                         var code = ezResponse.Substring(0, ezResponse.Length - 2).Split('.')[ezResponse.Substring(0, ezResponse.Length - 2).Split('.').Length - 2];
 
 
-                        //LogEvents($"Processing  : LABEL1=<{"Invalid Card"}>Label2=<Transaction cancelled.>");
                         LogEvents($"Processing  : LABEL1=<{message}>Label2=<Transaction cancelled.>");
                         DisplayDescription(1, "", 10, "", 20, "", 25, "", 20);
                         DisplayDescription(2, "", 10, "", 20, "", 25, "", 20);
@@ -2115,8 +1947,6 @@ namespace FujitsuCDU
                 IPEndPoint remoteEP = new IPEndPoint(remoteIP, remotePort);
                 IPEndPoint localEP = new IPEndPoint(localIP, localPort);
 
-
-                //ezCashclient = new TcpClient(SERVER_IP, Convert.ToInt32(serviceConfiguration.GetFileLocation("EZcashPort")));
                 ezCashclient = new TcpClient(localEP);
                 ezCashclient.Connect(remoteEP);
                 clientStream = ezCashclient.GetStream();
@@ -2162,10 +1992,8 @@ namespace FujitsuCDU
                         int bytesRead = clientStream.Read(bytesToRead, 0, ezCashclient.ReceiveBufferSize);
                         if (bytesRead > 0)
                         {
-                            //var responsefromHost = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                             string ezCashResponse = utilities.ByteToHexaEZCash(bytesToRead.Skip(2).Take(bytesRead).ToArray(), bytesRead);
                             await ProcessSocketMessage(ezCashResponse);
-                            // return ezCashResponse;
                         }
                         else
                         {
@@ -2194,7 +2022,6 @@ namespace FujitsuCDU
                             ezCashclient.Client.Shutdown(SocketShutdown.Both);
                             ezCashclient.Client.Close();
                         }
-                        // ezCashclient = null;
                         await DisplayErrorMessage("Sorry, Dispenser is temporarily out of service.");
                         SocketConnected = false;
                         Thread initializeThread = new Thread(() => BackgroundInitializing());
@@ -2204,9 +2031,7 @@ namespace FujitsuCDU
                             if (listenThread.IsAlive)
                                 listenThread.Abort(100);
                         }
-                        //listenThread.Abort();
                         break;
-                        // return string.Empty;
                     }
                 }
 
@@ -2220,7 +2045,6 @@ namespace FujitsuCDU
                     ezCashclient.Client.Close();
                     SocketConnected = false;
                 }
-                //listenThread.Abort();
                 await DisplayErrorMessage("Sorry, Dispenser is temporarily out of service.");
             }
         }
@@ -2290,7 +2114,6 @@ namespace FujitsuCDU
             catch (Exception ex)
             {
                 LogEvents($"Client socket ReceiveMessage {ex.Message} ");
-                //10.000.000.7
             }
 
         }
@@ -2333,6 +2156,5 @@ namespace FujitsuCDU
         }
 
 
-        // refactoring ends
     }
 }
