@@ -345,10 +345,13 @@ namespace FujitsuCDU
         {
             this.Invoke(new MethodInvoker(delegate
             {
+
+                lblInitial1.Text = string.Empty;
+                lblInitial2.Text = string.Empty;
+
                 lblMessage1.Text = "Sorry, Dispenser is temporarily out of service.";
 
                 lblMessage1.SetBounds((pnlMessage.ClientSize.Width - lblMessage1.Width) / 2, (pnlMessage.ClientSize.Height - lblMessage1.Height) / 2, 0, 0, BoundsSpecified.Location);
-
 
             }));
 
@@ -481,6 +484,35 @@ namespace FujitsuCDU
             }
         }
 
+        ~CDU()
+        {
+            try
+            {
+                if (ezCashclient != null)
+                {
+                    if (ezCashclient.Client.Connected)
+                        ezCashclient.Client.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    ezCashclient.Client.Close();
+                    ezCashclient.Client.Dispose();
+                    ezCashclient = null;
+                }
+                Thread.Sleep(5000);
+
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+
+
+                Environment.Exit(1);
+            }
+            catch (Exception ex)
+            {
+                LogEvents($"Exception at CDU destruction : {ex.Message}");
+            }
+
+        }
+
 
         public CDU()
         {
@@ -547,17 +579,21 @@ namespace FujitsuCDU
         {
             try
             {
-                if (initializeThread != null)
-                    initializeThread.Abort();
-                if (bgThread != null)
-                    bgThread.Abort();
 
-                if (ezCashclient != null && ezCashclient.Client.Connected)
+                if (ezCashclient != null)
                 {
-                    ezCashclient.Client.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    if (ezCashclient.Client.Connected)
+                        ezCashclient.Client.Shutdown(System.Net.Sockets.SocketShutdown.Both);
                     ezCashclient.Client.Close();
+                    ezCashclient.Client.Dispose();
                     ezCashclient = null;
                 }
+
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+
 
                 Environment.Exit(1);
             }
@@ -1283,7 +1319,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at OpenPort :{ex.Message} .Attempting to reconnect .");
+                LogEvents($"Exception at OpenPort :{ex.Message} .Attempting to reconnect ...");
             }
         }
 
@@ -1535,8 +1571,6 @@ namespace FujitsuCDU
                 LogEvents($"Exception at TimeOutTransactionForCoins {ex.Message }");
             }
         }
-
-
         public async Task ProcessBarcode(string barcode)
         {
             await Task.Run(() =>
@@ -1953,8 +1987,6 @@ namespace FujitsuCDU
             });
         }
 
-
-
         public bool CreateEZCashSocket()
         {
             try
@@ -1996,17 +2028,17 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Client socket ReceiveMessage {ex.Message} ");
+                LogEvents($"Client socket ReceiveMessage {ex.Message}\r\n{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: Attempting to reconnect ...");
                 if (ezCashclient != null)
                 {
                     if (ezCashclient.Connected)
                         ezCashclient.Client.Shutdown(SocketShutdown.Both);
                     ezCashclient.Client.Close();
+                    ezCashclient.Client.Dispose();
                     ezCashclient = null;
                 }
                 SocketConnected = false;
-                //Thread initializeThread = new Thread(() => BackgroundInitializing());
-                //initializeThread.Start();
+                Thread.Sleep(45000);
                 if (listenThread != null)
                 {
                     if (listenThread.IsAlive)
@@ -2016,7 +2048,6 @@ namespace FujitsuCDU
             }
 
         }
-
 
         public async void ReceiveMessage()
         {
@@ -2040,6 +2071,7 @@ namespace FujitsuCDU
                                 if (ezCashclient.Connected)
                                     ezCashclient.Client.Shutdown(SocketShutdown.Both);
                                 ezCashclient.Client.Close();
+                                ezCashclient.Client.Dispose();
                             }
                             await DisplayErrorMessage("Sorry, Dispenser is temporarily out of service.");
                             SocketConnected = false;
@@ -2062,6 +2094,7 @@ namespace FujitsuCDU
                             if (ezCashclient.Connected)
                                 ezCashclient.Client.Shutdown(SocketShutdown.Both);
                             ezCashclient.Client.Close();
+                            ezCashclient.Client.Dispose();
                             ezCashclient = null;
                         }
                         await DisplayErrorMessage("Sorry, Dispenser is temporarily out of service.");
@@ -2088,6 +2121,7 @@ namespace FujitsuCDU
                     if (ezCashclient.Connected)
                         ezCashclient.Client.Shutdown(SocketShutdown.Both);
                     ezCashclient.Client.Close();
+                    ezCashclient.Client.Dispose();
                     ezCashclient = null;
                     SocketConnected = false;
                 }
