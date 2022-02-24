@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FujitsuCDU
@@ -15,7 +16,7 @@ namespace FujitsuCDU
         private static string folder = GetAppettingValue("Trace");
         private static int logsize = int.Parse(GetAppettingValue("LogSize"));
         private static string ExceptionLog = GetAppettingValue("ExceptionLog");
-        public static ConcurrentQueue<string> logmessages = new ConcurrentQueue<string>();
+        public static Queue<string> logmessages = new Queue<string>();
         private static bool IsloggingStopped = false;
 
         static Logger()
@@ -32,9 +33,13 @@ namespace FujitsuCDU
             {
                 try
                 {
-                    var input = string.Empty;
-                    while (logmessages.TryDequeue(out input))
-                        LogMessages(input);
+                    if (logmessages.Count > 0)
+                        LogMessages(logmessages.Dequeue());
+                    else
+                    {
+                        Thread.Sleep(500);
+                    }
+
 
                 }
                 catch (Exception ex)
@@ -42,6 +47,7 @@ namespace FujitsuCDU
                     IsloggingStopped = true;
                     LogMessages($"Dequeue Error : {ex.Message}");
                 }
+
             }
 
         }
@@ -129,52 +135,4 @@ namespace FujitsuCDU
 
     }
 
-
-    //public class Logger
-    //{
-    //    public static object _locked = new object();
-
-    //    public static void LogWithNoLock(string message)
-    //    {
-    //        string folder = GetFileLocation("Trace");
-    //        if (!File.Exists(folder))
-    //        {
-    //            using (FileStream fs = File.Create(folder))
-    //            {
-    //                byte[] info = new UTF8Encoding(true).GetBytes(message);
-    //                fs.Write(info, 0, info.Length);
-
-    //            }
-    //            //// Create a file to write to.
-    //            //using (StreamWriter sw = File.CreateText(folder))
-    //            //{
-    //            //    sw.WriteLine($"{message}");
-
-    //            //}
-
-    //        }
-    //        else
-    //        {
-
-    //            //using (StreamWriter sw = File.AppendText(folder))
-    //            //{
-    //            //    //sw.WriteLine($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}{deviceId} {message}");
-    //            //    sw.WriteLine($"{message}");
-
-    //            //}               
-    //            using (var fs = new FileStream(folder, FileMode.Append, FileAccess.Write, FileShare.Write))
-    //            using (var sw = new StreamWriter(fs))
-    //            {
-    //                sw.WriteLine(message);
-    //            }
-
-    //        }
-
-    //    }
-
-    //    private static string GetFileLocation(string keyvalue)
-    //    {
-    //        return ConfigurationManager.AppSettings[keyvalue];
-    //    }
-    //}
 }
