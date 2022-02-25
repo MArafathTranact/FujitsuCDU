@@ -2007,8 +2007,8 @@ namespace FujitsuCDU
                 ezCashclient.Connect(remoteEP);
                 clientStream = ezCashclient.GetStream();
 
-                Thread.Sleep(5000);
-                if (ezCashclient.Connected)
+                Thread.Sleep(3000);
+                if (ezCashclient != null && ezCashclient.Connected)
                 {
                     byte[] bytesToRead = new byte[ezCashclient.ReceiveBufferSize];
                     int bytesRead = clientStream.Read(bytesToRead, 0, ezCashclient.ReceiveBufferSize);
@@ -2208,6 +2208,19 @@ namespace FujitsuCDU
                     var lblMessage1 = Controls.Find("lblMessage1", true).FirstOrDefault();
                     var lblMessage2 = Controls.Find("lblMessage2", true).FirstOrDefault();
                     var pnlMessage = Controls.Find("pnlMessage", true).FirstOrDefault();
+
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+
+                        lblInitial1.Text = String.Empty;
+                        lblInitial2.Text = String.Empty;
+
+                        lblInitial1.SetBounds((pnlInitialize.ClientSize.Width - lblInitial1.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial1.Height) / 2, 0, 0, BoundsSpecified.Location);
+                        lblInitial2.SetBounds((pnlInitialize.ClientSize.Width - lblInitial2.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial2.Height) / 2, 0, 0, BoundsSpecified.Location);
+
+
+                    }));
+
 
                     if (null != lblMessage1 && lblMessage1 is Label && null != pnlMessage && pnlMessage is Panel)
                     {
