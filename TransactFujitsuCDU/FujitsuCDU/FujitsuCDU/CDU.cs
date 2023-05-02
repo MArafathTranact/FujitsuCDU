@@ -349,7 +349,8 @@ namespace FujitsuCDU
 
                 lblMessage1.SetBounds((pnlMessage.ClientSize.Width - lblMessage1.Width) / 2, (pnlMessage.ClientSize.Height - lblMessage1.Height) / 2, 0, 0, BoundsSpecified.Location);
 
-
+                lblInitial1.Text = string.Empty;
+                lblInitial2.Text = string.Empty;
             }));
 
         }
@@ -547,17 +548,21 @@ namespace FujitsuCDU
         {
             try
             {
-                if (initializeThread != null)
-                    initializeThread.Abort();
-                if (bgThread != null)
-                    bgThread.Abort();
 
-                if (ezCashclient != null && ezCashclient.Client.Connected)
+                if (ezCashclient != null)
                 {
-                    ezCashclient.Client.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    if (ezCashclient.Client.Connected)
+                        ezCashclient.Client.Shutdown(System.Net.Sockets.SocketShutdown.Both);
                     ezCashclient.Client.Close();
                     ezCashclient = null;
                 }
+                Thread.Sleep(5000);
+
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+
 
                 Environment.Exit(1);
             }
