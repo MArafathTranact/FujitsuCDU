@@ -86,6 +86,8 @@ namespace FujitsuCDU
 
         public decimal TotalAmount = 0.0m;
         public decimal DispensingAmount = 0.0m;
+        public string ValidShortDispenseMessage = string.Empty;
+        public string ValidShortDispenseCode = string.Empty;
         public CDU cdu;
         public List<Cannister> TheCan = new List<Cannister>(); // To hold the Transaction (error or success) details .
 
@@ -1250,10 +1252,31 @@ namespace FujitsuCDU
                 // Todo for Coin dispensing message
                 if (TotalAmount != DispensingAmount)
                 {
-                    LogEvents($"Processing  : LABEL3=<Dispensing ${TotalAmount}of ${TotalAmount}>");
+                    if (ValidShortDispenseMessage.ToLower().Contains("rescan"))
+                    {
 
-                    DisplayDescription(3, string.Empty, 0, string.Empty, 0, $"Dispensing ${TotalAmount} of ${TotalAmount}", 25, string.Empty, 0);
-                    // DisplayDescription(4, string.Empty, 0, string.Empty, 0, string.Empty, 0, "Thank you.", 25);
+                        LogEvents($"Processing  : LABEL1=<{ValidShortDispenseMessage}>Label2=<Transaction completed.>");
+                        DisplayDescription(1, "", 10, "", 20, "", 25, "", 20);
+                        DisplayDescription(2, "", 10, "", 20, "", 25, "", 20);
+                        DisplayDescription(3, "", 20, "", 20, ValidShortDispenseMessage, 25, "", 20);
+                        DisplayDescription(4, "", 20, "", 20, "", 0, "Transaction completed.", 25);
+
+                        LogEvents($"Sending EZCash socket response on short/multibundle dispense");
+                        SendSocketMessage($"0022.000..9");
+                        Thread.Sleep(2000);
+                        UpdateCassetteStatus();
+                        Thread.Sleep(2000);
+                        timeoutTimer.Enabled = true;
+                        timeoutTimer.Start();
+                    }
+                    else
+                    {
+                        LogEvents($"Processing  : LABEL3=<Dispensing ${TotalAmount} of ${TotalAmount}>");
+
+                        DisplayDescription(3, string.Empty, 0, string.Empty, 0, $"Dispensing ${TotalAmount} of ${TotalAmount}", 25, string.Empty, 0);
+                        // DisplayDescription(4, string.Empty, 0, string.Empty, 0, string.Empty, 0, "Thank you.", 25);
+                    }
+
                 }
                 else
                 {
@@ -1288,6 +1311,8 @@ namespace FujitsuCDU
 
         public void UpdateCassetteStatus()
         {
+            if (string.IsNullOrEmpty(SuccessDispenseMessage))
+                return;
             var can1to4Status = SuccessDispenseMessage.Replace(" ", "").Substring(42, 8);
             var cassetteStatus = string.Empty;
             foreach (var item in can1to4Status.SplitInParts(2))
@@ -1308,6 +1333,7 @@ namespace FujitsuCDU
 
             }
 
+            SuccessDispenseMessage = string.Empty;
             SendSocketMessage($"0031.{cassetteStatus}..9");
 
         }
@@ -1618,6 +1644,8 @@ namespace FujitsuCDU
                     {
                         var originalAmount = string.Empty;
                         var dispensingAmount = string.Empty;
+                        var successMessage = string.Empty;
+                        var successCode = string.Empty;
                         if (ezResponse.Split('.').Length > 8)
                         {
                             var deci = ezResponse.Split('.')[7].Replace("\u001d", "").Length == 1 ? ezResponse.Split('.')[7].Replace("\u001d", "") + "0" : ezResponse.Split('.')[7].Replace("\u001d", "");
@@ -1629,6 +1657,17 @@ namespace FujitsuCDU
                         {
                             originalAmount = ezResponse.Split('.')[6].Replace("\u001d", "");
                             dispensingAmount = ezResponse.Split('.')[5].Replace("\u001d", "");
+
+                        }
+
+                        try
+                        {
+                            var tempezResponse = ezResponse.TrimEnd(new Char[] { '.' });
+                            ValidShortDispenseMessage = tempezResponse.Split('.')[tempezResponse.Substring(0, tempezResponse.Length - 2).Split('.').Length - 1].Remove(0, 1);
+                            ValidShortDispenseCode = tempezResponse.Substring(0, tempezResponse.Length - 2).Split('.')[tempezResponse.Substring(0, tempezResponse.Length - 2).Split('.').Length - 2];
+                        }
+                        catch (Exception)
+                        {
 
                         }
 
