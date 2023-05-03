@@ -63,7 +63,7 @@ namespace FujitsuCDU
             // 
             this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(126, 102);
-            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.button1.Margin = new System.Windows.Forms.Padding(1);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(28, 20);
             this.button1.TabIndex = 0;
@@ -77,7 +77,7 @@ namespace FujitsuCDU
             this.pnlInitialize.Controls.Add(this.lblInitial1);
             this.pnlInitialize.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlInitialize.Location = new System.Drawing.Point(0, 205);
-            this.pnlInitialize.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlInitialize.Margin = new System.Windows.Forms.Padding(1);
             this.pnlInitialize.Name = "pnlInitialize";
             this.pnlInitialize.Size = new System.Drawing.Size(718, 96);
             this.pnlInitialize.TabIndex = 6;
@@ -108,7 +108,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette8.BackColor = System.Drawing.Color.Green;
             this.pnlCasette8.Location = new System.Drawing.Point(191, 9);
-            this.pnlCasette8.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette8.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette8.Name = "pnlCasette8";
             this.pnlCasette8.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette8.TabIndex = 7;
@@ -118,7 +118,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette7.BackColor = System.Drawing.Color.Green;
             this.pnlCasette7.Location = new System.Drawing.Point(165, 9);
-            this.pnlCasette7.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette7.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette7.Name = "pnlCasette7";
             this.pnlCasette7.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette7.TabIndex = 6;
@@ -128,7 +128,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette6.BackColor = System.Drawing.Color.Green;
             this.pnlCasette6.Location = new System.Drawing.Point(139, 9);
-            this.pnlCasette6.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette6.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette6.Name = "pnlCasette6";
             this.pnlCasette6.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette6.TabIndex = 5;
@@ -138,7 +138,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette5.BackColor = System.Drawing.Color.Green;
             this.pnlCasette5.Location = new System.Drawing.Point(112, 9);
-            this.pnlCasette5.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette5.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette5.Name = "pnlCasette5";
             this.pnlCasette5.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette5.TabIndex = 4;
@@ -148,7 +148,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette4.BackColor = System.Drawing.Color.Green;
             this.pnlCasette4.Location = new System.Drawing.Point(86, 9);
-            this.pnlCasette4.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette4.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette4.Name = "pnlCasette4";
             this.pnlCasette4.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette4.TabIndex = 3;
@@ -158,7 +158,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette3.BackColor = System.Drawing.Color.Green;
             this.pnlCasette3.Location = new System.Drawing.Point(60, 9);
-            this.pnlCasette3.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette3.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette3.Name = "pnlCasette3";
             this.pnlCasette3.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette3.TabIndex = 2;
@@ -170,7 +170,7 @@ namespace FujitsuCDU
             this.pnlInitailize2.Controls.Add(this.lblInitial2);
             this.pnlInitailize2.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlInitailize2.Location = new System.Drawing.Point(0, 301);
-            this.pnlInitailize2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlInitailize2.Margin = new System.Windows.Forms.Padding(1);
             this.pnlInitailize2.Name = "pnlInitailize2";
             this.pnlInitailize2.Size = new System.Drawing.Size(718, 96);
             this.pnlInitailize2.TabIndex = 7;
@@ -193,7 +193,7 @@ namespace FujitsuCDU
             this.pnlMessage.Controls.Add(this.lblMessage1);
             this.pnlMessage.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlMessage.Location = new System.Drawing.Point(0, 397);
-            this.pnlMessage.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlMessage.Margin = new System.Windows.Forms.Padding(1);
             this.pnlMessage.Name = "pnlMessage";
             this.pnlMessage.Size = new System.Drawing.Size(718, 96);
             this.pnlMessage.TabIndex = 8;
@@ -202,7 +202,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette2.BackColor = System.Drawing.Color.Green;
             this.pnlCasette2.Location = new System.Drawing.Point(34, 9);
-            this.pnlCasette2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette2.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette2.Name = "pnlCasette2";
             this.pnlCasette2.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette2.TabIndex = 1;
@@ -214,7 +214,7 @@ namespace FujitsuCDU
             this.pnlMessage2.Controls.Add(this.lblMessage2);
             this.pnlMessage2.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlMessage2.Location = new System.Drawing.Point(0, 493);
-            this.pnlMessage2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlMessage2.Margin = new System.Windows.Forms.Padding(1);
             this.pnlMessage2.Name = "pnlMessage2";
             this.pnlMessage2.Size = new System.Drawing.Size(718, 96);
             this.pnlMessage2.TabIndex = 9;
@@ -234,7 +234,7 @@ namespace FujitsuCDU
             // 
             this.pnlCasette1.BackColor = System.Drawing.Color.Green;
             this.pnlCasette1.Location = new System.Drawing.Point(8, 9);
-            this.pnlCasette1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasette1.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasette1.Name = "pnlCasette1";
             this.pnlCasette1.Size = new System.Drawing.Size(20, 15);
             this.pnlCasette1.TabIndex = 0;
@@ -253,7 +253,7 @@ namespace FujitsuCDU
             this.pnlCasstteStatus.Controls.Add(this.pnlCasette1);
             this.pnlCasstteStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlCasstteStatus.Location = new System.Drawing.Point(0, 449);
-            this.pnlCasstteStatus.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlCasstteStatus.Margin = new System.Windows.Forms.Padding(1);
             this.pnlCasstteStatus.Name = "pnlCasstteStatus";
             this.pnlCasstteStatus.Size = new System.Drawing.Size(718, 42);
             this.pnlCasstteStatus.TabIndex = 10;
@@ -271,7 +271,7 @@ namespace FujitsuCDU
             this.pnlOutter.Controls.Add(this.panel2);
             this.pnlOutter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlOutter.Location = new System.Drawing.Point(0, 0);
-            this.pnlOutter.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.pnlOutter.Margin = new System.Windows.Forms.Padding(1);
             this.pnlOutter.Name = "pnlOutter";
             this.pnlOutter.Size = new System.Drawing.Size(722, 495);
             this.pnlOutter.TabIndex = 1;
@@ -282,7 +282,7 @@ namespace FujitsuCDU
             this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.panel2.Margin = new System.Windows.Forms.Padding(1);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(718, 205);
             this.panel2.TabIndex = 5;
@@ -296,7 +296,7 @@ namespace FujitsuCDU
             this.ClientSize = new System.Drawing.Size(722, 495);
             this.Controls.Add(this.pnlOutter);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "CDU";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DispenseLive";

@@ -302,7 +302,7 @@ namespace FujitsuCDU
 
                 }
 
-                IsProcessCompleted = false;
+                // IsProcessCompleted = false;
 
             }
             catch (Exception ex)
@@ -673,7 +673,7 @@ namespace FujitsuCDU
             try
             {
                 LogEvents("Entered DispenseAmount");
-                LogEvents($"Loading screen : Dispensing ${ amount} of ${ originalAmount} ");
+                LogEvents($"Loading screen : Dispensing ${amount} of ${originalAmount} ");
                 DisplayDescription(3, "", 25, "", 25, $"Dispensing ${amount} of ${originalAmount}", 25, "", 25);
 
                 CanRetry = false;
@@ -1136,14 +1136,14 @@ namespace FujitsuCDU
                     var dispensedMessage = string.Empty;
                     foreach (var item in canDetails1to4.SplitInParts(4))
                     {
-                        LogEvents($"Cassette {count} dispensed {item[1] }{item[3]} bills.");
+                        LogEvents($"Cassette {count} dispensed {item[1]}{item[3]} bills.");
                         dispensedMessage += item[1].ToString() + item[3].ToString();
                         count++;
                     }
                     count = 5;
                     foreach (var item in canDetails5to8.SplitInParts(4))
                     {
-                        LogEvents($"Cassette {count} dispensed {item[1] }{item[3]} bills.");
+                        LogEvents($"Cassette {count} dispensed {item[1]}{item[3]} bills.");
                         dispensedMessage += item[1].ToString() + item[3].ToString();
                         count++;
                     }
@@ -1250,9 +1250,9 @@ namespace FujitsuCDU
                 // Todo for Coin dispensing message
                 if (TotalAmount != DispensingAmount)
                 {
-                    LogEvents($"Processing  : LABEL3=<Dispensing ${ TotalAmount }of ${ TotalAmount}>");
+                    LogEvents($"Processing  : LABEL3=<Dispensing ${TotalAmount}of ${TotalAmount}>");
 
-                    DisplayDescription(3, string.Empty, 0, string.Empty, 0, $"Dispensing ${TotalAmount } of ${TotalAmount}", 25, string.Empty, 0);
+                    DisplayDescription(3, string.Empty, 0, string.Empty, 0, $"Dispensing ${TotalAmount} of ${TotalAmount}", 25, string.Empty, 0);
                     // DisplayDescription(4, string.Empty, 0, string.Empty, 0, string.Empty, 0, "Thank you.", 25);
                 }
                 else
@@ -1556,7 +1556,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at TimeOutTransaction {ex.Message }");
+                LogEvents($"Exception at TimeOutTransaction {ex.Message}");
             }
         }
 
@@ -1577,7 +1577,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at TimeOutTransactionForCoins {ex.Message }");
+                LogEvents($"Exception at TimeOutTransactionForCoins {ex.Message}");
             }
         }
         public async Task ProcessBarcode(string barcode)
@@ -1620,7 +1620,8 @@ namespace FujitsuCDU
                         var dispensingAmount = string.Empty;
                         if (ezResponse.Split('.').Length > 8)
                         {
-                            originalAmount = ezResponse.Split('.')[6].Replace("\u001d", "") + '.' + ezResponse.Split('.')[7].Replace("\u001d", "");
+                            var deci = ezResponse.Split('.')[7].Replace("\u001d", "").Length == 1 ? ezResponse.Split('.')[7].Replace("\u001d", "") + "0" : ezResponse.Split('.')[7].Replace("\u001d", "");
+                            originalAmount = ezResponse.Split('.')[6].Replace("\u001d", "") + '.' + deci;
                             dispensingAmount = ezResponse.Split('.')[5].Replace("\u001d", "");
 
                         }
@@ -1918,7 +1919,7 @@ namespace FujitsuCDU
                             });
 
                         }
-                        LogEvents($"ProcessCassetteStatus {ex.Message} ");
+                        LogEvents($"Exception at ProcessCassetteStatus {ex.Message} ");
 
                     }
 
@@ -2254,9 +2255,7 @@ namespace FujitsuCDU
 
         private void LogEvents(string input)
         {
-            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: {input}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff} : {input}");
         }
-
-
     }
 }
