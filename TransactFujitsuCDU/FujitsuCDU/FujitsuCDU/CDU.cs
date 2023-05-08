@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
@@ -112,7 +113,7 @@ namespace FujitsuCDU
             {
                 Thread cduInit = new Thread(StartCDUInit);
                 cduInit.Start();
-                Thread.Sleep(20);
+                Task.Delay(10000);
 
                 Thread changedescription = new Thread(ChangeDescription);
                 changedescription.Start();
@@ -584,29 +585,26 @@ namespace FujitsuCDU
             try
             {
 
-                if (ezCashclient != null)
+
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+
+
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+
+
+                foreach (var process in Process.GetProcessesByName("FujitsuCDU"))
                 {
-                    if (ezCashclient.Client.Connected)
-                        ezCashclient.Client.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                    ezCashclient.Client.Close();
-                    ezCashclient.Client.Dispose();
-                    ezCashclient = null;
+                    LogEvents("Cleaning up resource allocation and its usuage is completed");
+                    Task.Delay(30000);
+                    process.Kill();
                 }
-                Thread.Sleep(5000);
 
-                if (initializeThread != null)
-                    initializeThread.Abort(50);
-                if (bgThread != null)
-                    bgThread.Abort(50);
-
-
-                if (initializeThread != null)
-                    initializeThread.Abort(50);
-                if (bgThread != null)
-                    bgThread.Abort(50);
-
-
-                Environment.Exit(1);
             }
             catch (Exception ex)
             {
@@ -1717,10 +1715,10 @@ namespace FujitsuCDU
 
                     try
                     {
-                        ezResponse = ezResponse.Remove(0, ezResponse.IndexOf('['));
-                        int index = ezResponse.LastIndexOf("]");
-                        if (index > 0)
-                            ezResponse = ezResponse.Substring(0, index + 1);
+                        if (ezResponse.Contains("].."))
+                        {
+                            ezResponse = ezResponse.Replace("]..", "]");
+                        }
 
                         var denoms = JsonConvert.DeserializeObject<List<DenominationInfo>>(ezResponse);
 
@@ -2124,8 +2122,9 @@ namespace FujitsuCDU
                             }
                             await DisplayErrorMessage("Sorry, Dispenser is temporarily out of service.");
                             SocketConnected = false;
-                            //Thread initializeThread = new Thread(() => BackgroundInitializing());
-                            //initializeThread.Start();
+                            InitailConnected = false;
+                            await HidePanelsonDisconnnect();
+                            await Task.Delay(10000);
                             await Task.Factory.StartNew(() => BackgroundInitializing());
                             if (listenThread != null)
                             {
@@ -2289,6 +2288,33 @@ namespace FujitsuCDU
             catch (Exception ex)
             {
                 LogEvents($"Client socket ReceiveMessage {ex.Message} ");
+            }
+        }
+
+        private async Task HidePanelsonDisconnnect()
+        {
+            var pnlCasette1 = Controls.Find("pnlCasette1", true).FirstOrDefault();
+            var pnlCasette2 = Controls.Find("pnlCasette2", true).FirstOrDefault();
+            var pnlCasette3 = Controls.Find("pnlCasette3", true).FirstOrDefault();
+            var pnlCasette4 = Controls.Find("pnlCasette4", true).FirstOrDefault();
+            var pnlCasette5 = Controls.Find("pnlCasette5", true).FirstOrDefault();
+            var pnlCasette6 = Controls.Find("pnlCasette6", true).FirstOrDefault();
+            var pnlCasette7 = Controls.Find("pnlCasette7", true).FirstOrDefault();
+            var pnlCasette8 = Controls.Find("pnlCasette8", true).FirstOrDefault();
+
+            if (pnlCasette1 != null && pnlCasette2 != null && pnlCasette3 != null && pnlCasette4 != null && pnlCasette5 != null && pnlCasette6 != null && pnlCasette7 != null && pnlCasette8 != null && pnlCasstteStatus != null && pnlCasette1 is Panel && pnlCasstteStatus is Panel)
+            {
+                BeginInvoke((Action)delegate ()
+                {
+                    pnlCasette1.Visible = false;
+                    pnlCasette2.Visible = false;
+                    pnlCasette3.Visible = false;
+                    pnlCasette4.Visible = false;
+                    pnlCasette5.Visible = false;
+                    pnlCasette6.Visible = false;
+                    pnlCasette7.Visible = false;
+                    pnlCasette8.Visible = false;
+                });
             }
         }
 
