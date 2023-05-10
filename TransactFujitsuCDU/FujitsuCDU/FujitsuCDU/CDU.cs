@@ -53,6 +53,8 @@ namespace FujitsuCDU
         public string WelcomeScreen1 = string.Empty;
         public string WelcomeScreen2 = string.Empty;
         public bool InitailConnected = false;
+
+        public bool BarcodeReceived = false;
         //
 
         #region Constant
@@ -226,7 +228,7 @@ namespace FujitsuCDU
                     {
                         SocketConnected = true;
                         LogEvents($"EZCash Socket Connected.");
-
+                        IsProcessCompleted = false;
                         Thread initCDU = new Thread(InitCDU);
                         initCDU.Start();
                         break;
@@ -430,6 +432,7 @@ namespace FujitsuCDU
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+
             try
             {
                 char c = (char)keyData;
@@ -439,9 +442,10 @@ namespace FujitsuCDU
 
                 if (c == (char)Keys.Return)
                 {
-                    if (!IsDown && !IsDisConnected)
+                    if (!IsDown && !IsDisConnected && !BarcodeReceived)
                     {
                         LogEvents($"Barcode Received : {_barcode}");
+                        BarcodeReceived = true;
                         Thread cduDispense = new Thread(() => ProcessBarcodeAndDispense(_barcode));
                         cduDispense.Start();
                         cduDispense.Join();
@@ -727,6 +731,10 @@ namespace FujitsuCDU
         {
             try
             {
+                if (BarcodeReceived)
+                {
+                    DisplayDescription(4, "", 0, "", 0, "", 0, "Please wait. We are trying to dispense with different combination", 30);
+                }
                 LogEvents("Entered InitCDU");
                 StringBuilder Msg = new StringBuilder();
                 Msg.Append("6002FF00001A0000"); //DH0(60),DH1(02),DH2(FF), RSV1(00) , DH3(001A) ,0DR(0000)
@@ -981,6 +989,7 @@ namespace FujitsuCDU
                     case TDevState.stWaitPresenter:
                         LogEvents($"Dispense Completed");
                         CanRetry = true;
+
                         OnDispenseCompleted(message, messagebyte);
                         break;
                     case TDevState.stWaitTranReply:
@@ -1266,6 +1275,7 @@ namespace FujitsuCDU
                         Thread.Sleep(2000);
                         timeoutTimer.Enabled = true;
                         timeoutTimer.Start();
+                        BarcodeReceived = false;
                     }
                     else
                     {
@@ -1305,6 +1315,8 @@ namespace FujitsuCDU
 
             timeoutTimer.Enabled = true;
             timeoutTimer.Start();
+
+            BarcodeReceived = false;
         }
 
         public void UpdateCassetteStatus()
@@ -1331,7 +1343,7 @@ namespace FujitsuCDU
 
             }
 
-            SuccessDispenseMessage = string.Empty;
+            //SuccessDispenseMessage = string.Empty;
             SendSocketMessage($"0031.{cassetteStatus}..9");
 
         }
@@ -1691,6 +1703,7 @@ namespace FujitsuCDU
                         Thread.Sleep(2000);
                         timeoutTimer.Enabled = true;
                         timeoutTimer.Start();
+                        BarcodeReceived = false;
                     }
 
                 }
@@ -2013,6 +2026,7 @@ namespace FujitsuCDU
                 IsDown = false;
                 if (lblInitial1 != null && lblInitial1 is Label && lblInitial2 != null && lblInitial2 is Label && lblMessage1 != null && lblMessage1 is Label && lblMessage2 != null && lblMessage2 is Label)
                 {
+                    IsProcessCompleted = false;
                     Thread initCDU = new Thread(InitCDU);
                     initCDU.Start();
 
