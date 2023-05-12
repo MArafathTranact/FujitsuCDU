@@ -55,6 +55,8 @@ namespace FujitsuCDU
         public bool InitailConnected = false;
 
         public bool BarcodeReceived = false;
+        public bool NoCasstteUpdateonFatal = false;
+        public List<int> fatalCassetteList = new List<int>();
         //
 
         #region Constant
@@ -202,6 +204,9 @@ namespace FujitsuCDU
         {
             try
             {
+                if (fatalCassetteList != null)
+                    fatalCassetteList.Clear();
+
                 if (!InitailConnected)
                 {
                     if (InvokeRequired)
@@ -360,6 +365,7 @@ namespace FujitsuCDU
 
                 lblInitial1.Text = string.Empty;
                 lblInitial2.Text = string.Empty;
+                lblMessage2.Text = string.Empty;
             }));
 
         }
@@ -446,6 +452,8 @@ namespace FujitsuCDU
                     {
                         LogEvents($"Barcode Received : {_barcode}");
                         BarcodeReceived = true;
+                        NoCasstteUpdateonFatal = false;
+                        fatalCassetteList.Clear();
                         Thread cduDispense = new Thread(() => ProcessBarcodeAndDispense(_barcode));
                         cduDispense.Start();
                         cduDispense.Join();
@@ -1050,6 +1058,7 @@ namespace FujitsuCDU
                                     if (result.MappingCan == "01")
                                     {
                                         canStatus.Append(4);
+                                        fatalCassetteList.Add(1);
                                         errorseverity.Append(3);
                                     }
                                     else
@@ -1062,6 +1071,7 @@ namespace FujitsuCDU
                                     if (result.MappingCan == "02")
                                     {
                                         canStatus.Append(4);
+                                        fatalCassetteList.Add(2);
                                         errorseverity.Append(3);
                                     }
                                     else
@@ -1074,6 +1084,7 @@ namespace FujitsuCDU
                                     if (result.MappingCan == "03")
                                     {
                                         canStatus.Append(4);
+                                        fatalCassetteList.Add(3);
                                         errorseverity.Append(3);
                                     }
                                     else
@@ -1086,6 +1097,7 @@ namespace FujitsuCDU
                                     if (result.MappingCan == "04")
                                     {
                                         canStatus.Append(4);
+                                        fatalCassetteList.Add(4);
                                         errorseverity.Append(3);
                                     }
                                     else
@@ -1098,6 +1110,7 @@ namespace FujitsuCDU
                                     if (result.MappingCan == "05")
                                     {
                                         canStatus.Append(4);
+                                        fatalCassetteList.Add(5);
                                         errorseverity.Append(3);
                                     }
                                     else
@@ -1110,6 +1123,7 @@ namespace FujitsuCDU
                                     if (result.MappingCan == "06")
                                     {
                                         canStatus.Append(4);
+                                        fatalCassetteList.Add(6);
                                         errorseverity.Append(3);
                                     }
                                     else
@@ -1123,6 +1137,7 @@ namespace FujitsuCDU
                         }
 
                         Socketerrorcode = $"0022.000..8.E2000000000000.{canStatus.ToString()}.0401500000000300000000.{errorseverity.ToString()}";
+                        NoCasstteUpdateonFatal = true;
                         LogEvents($"Message to EZCash socket : {Socketerrorcode}");
                     }
                     else
@@ -1201,44 +1216,64 @@ namespace FujitsuCDU
                     var cassetteRegister1 = work.Substring(42, 8).Trim().ToUpper();
                     var cassetteRegister2 = work.Substring(138, 8).Trim().ToUpper();
                     var canStatus = new StringBuilder();
+                    var cassetteCount = 1;
                     foreach (var cassette in cassetteRegister1.SplitInParts(2))
                     {
                         foreach (var item in cassette)
                         {
-                            if (item.ToString() == "8")
-                            {
-                                canStatus.Append("2");
-                            }
-                            else if (item.ToString() == "9")
+                            if (fatalCassetteList != null && fatalCassetteList.Contains(cassetteCount))
                             {
                                 canStatus.Append("4");
                             }
                             else
                             {
-                                canStatus.Append("0");
+                                if (item.ToString() == "8")
+                                {
+                                    canStatus.Append("2");
+                                }
+                                else if (item.ToString() == "9")
+                                {
+                                    canStatus.Append("4");
+                                }
+                                else
+                                {
+                                    canStatus.Append("0");
+                                }
                             }
+
+
                             break;
                         }
+                        cassetteCount++;
                     }
 
                     foreach (var cassette in cassetteRegister2.SplitInParts(2))
                     {
                         foreach (var item in cassette)
                         {
-                            if (item.ToString() == "8")
-                            {
-                                canStatus.Append("2");
-                            }
-                            else if (item.ToString() == "9")
+                            if (fatalCassetteList != null && fatalCassetteList.Contains(cassetteCount))
                             {
                                 canStatus.Append("4");
                             }
                             else
                             {
-                                canStatus.Append("0");
+
+                                if (item.ToString() == "8")
+                                {
+                                    canStatus.Append("2");
+                                }
+                                else if (item.ToString() == "9")
+                                {
+                                    canStatus.Append("4");
+                                }
+                                else
+                                {
+                                    canStatus.Append("0");
+                                }
                             }
                             break;
                         }
+                        cassetteCount++;
                     }
                     SendSocketMessage($"0031.{canStatus}..9");
                     LogEvents($"Message to EZCash socket : {Socketerrorcode}");
