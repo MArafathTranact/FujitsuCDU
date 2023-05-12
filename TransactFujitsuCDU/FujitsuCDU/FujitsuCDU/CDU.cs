@@ -534,6 +534,9 @@ namespace FujitsuCDU
         public CDU()
         {
             InitializeComponent();
+
+            LogEvents($"Launching CDU Application.....");
+
             this.MinimumSize = new Size(1500, 950);
             this.MaximumSize = new Size(1500, 950);
             descriptionLoad = GetFileLocation("DescriptionLoad");
@@ -596,19 +599,21 @@ namespace FujitsuCDU
         {
             try
             {
-
-
-                if (initializeThread != null)
-                    initializeThread.Abort(50);
-                if (bgThread != null)
-                    bgThread.Abort(50);
-
+                LogEvents("Cleaning up resource allocation.");
 
                 if (initializeThread != null)
                     initializeThread.Abort(50);
                 if (bgThread != null)
                     bgThread.Abort(50);
 
+
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+                LogEvents("CDU Application closed.");
+
+                Task.Delay(30000);
 
                 foreach (var process in Process.GetProcessesByName("FujitsuCDU"))
                 {
@@ -2144,7 +2149,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Client socket ReceiveMessage {ex.Message}\r\n{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: Attempting to reconnect ...");
+                LogEvents($"Client socket ReceiveMessage {ex.Message}\r\n{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff} : Attempting to reconnect ...");
                 if (ezCashclient != null)
                 {
                     if (ezCashclient.Connected)
