@@ -73,7 +73,7 @@ namespace FujitsuCDU
 
         private void LogEvents(string input)
         {
-            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff}: {input}");
+            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff} :{input}");
         }
 
         public string ConvertHex(string hexString)
