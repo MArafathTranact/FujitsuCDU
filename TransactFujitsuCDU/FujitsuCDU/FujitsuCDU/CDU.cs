@@ -1793,6 +1793,9 @@ namespace FujitsuCDU
                                                 case "2":
                                                     pnlCasette1.BackColor = Color.Red;
                                                     break;
+                                                case "3":
+                                                    pnlCasette1.BackColor = Color.Red;
+                                                    break;
                                                 case "4":
                                                     pnlCasette1.BackColor = Color.Yellow;
                                                     break;
@@ -1815,6 +1818,9 @@ namespace FujitsuCDU
                                                     pnlCasette2.BackColor = Color.Green;
                                                     break;
                                                 case "2":
+                                                    pnlCasette2.BackColor = Color.Red;
+                                                    break;
+                                                case "3":
                                                     pnlCasette2.BackColor = Color.Red;
                                                     break;
                                                 case "4":
@@ -1842,6 +1848,9 @@ namespace FujitsuCDU
                                                 case "2":
                                                     pnlCasette3.BackColor = Color.Red;
                                                     break;
+                                                case "3":
+                                                    pnlCasette3.BackColor = Color.Red;
+                                                    break;
                                                 case "4":
                                                     pnlCasette3.BackColor = Color.Yellow;
                                                     break;
@@ -1865,6 +1874,9 @@ namespace FujitsuCDU
                                                     pnlCasette4.BackColor = Color.Green;
                                                     break;
                                                 case "2":
+                                                    pnlCasette4.BackColor = Color.Red;
+                                                    break;
+                                                case "3":
                                                     pnlCasette4.BackColor = Color.Red;
                                                     break;
                                                 case "4":
@@ -1892,6 +1904,9 @@ namespace FujitsuCDU
                                                 case "2":
                                                     pnlCasette5.BackColor = Color.Red;
                                                     break;
+                                                case "3":
+                                                    pnlCasette5.BackColor = Color.Red;
+                                                    break;
                                                 case "4":
                                                     pnlCasette5.BackColor = Color.Yellow;
                                                     break;
@@ -1915,6 +1930,9 @@ namespace FujitsuCDU
                                                     pnlCasette6.BackColor = Color.Green;
                                                     break;
                                                 case "2":
+                                                    pnlCasette6.BackColor = Color.Red;
+                                                    break;
+                                                case "3":
                                                     pnlCasette6.BackColor = Color.Red;
                                                     break;
                                                 case "4":
@@ -2010,6 +2028,7 @@ namespace FujitsuCDU
 
                 }
 
+                SendSocketMessage($"0022.000..9");
             });
         }
 
@@ -2017,6 +2036,7 @@ namespace FujitsuCDU
         {
             await Task.Run(() =>
             {
+                SendSocketMessage($"0033.000..F.2000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
             });
         }
 
