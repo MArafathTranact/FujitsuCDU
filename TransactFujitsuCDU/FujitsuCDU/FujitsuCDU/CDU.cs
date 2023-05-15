@@ -951,27 +951,28 @@ namespace FujitsuCDU
 
                 switch (MYState)
                 {
-                    case TDevState.stWaitRejectInit:
+                    case TDevState.stWaitRejectInit: //State = 3 
                         ProcessInitResponse(message, messagebyte);
                         CanRetry = true;
                         break;
-                    case TDevState.stWaitReset:
+                    case TDevState.stWaitReset: //State = 6
                         ProcessInitResponse(message, messagebyte);
                         break;
-                    case TDevState.stWaitReadCassettes:
+                    case TDevState.stWaitReadCassettes: //State = 9
                         ProcessReadCassettes(message);
                         if (!SocketConnected)
                         {
                             ezcashSocket.CreateEZCashSocket();
                         }
                         break;
-                    case TDevState.stWaitPresenter:
-                        LogEvents($"Dispense Completed");
+                    case TDevState.stWaitPresenter: //State = 4
+                        LogEvents($"Presenter State completed . Dispense Completed");
                         CanRetry = true;
 
                         OnDispenseCompleted(message, messagebyte);
                         break;
-                    case TDevState.stWaitTranReply:
+                    case TDevState.stWaitTranReply: //State = 0
+                        LogEvents($"Wait for tran reply states .");
                         ProcessDispResponse(message, messagebyte);
                         break;
                 }
@@ -988,6 +989,7 @@ namespace FujitsuCDU
         {
             try
             {
+                LogEvents($"Processing dispense response message from CDU...");
                 byte[] TMsgData = new byte[40];
                 byte[,] TTotals = new byte[4, 32];
                 var R = new TCommonResp();
@@ -1003,6 +1005,7 @@ namespace FujitsuCDU
 
                 if (string.IsNullOrWhiteSpace(message))
                 {
+                    LogEvents($"No message received to process for dispense request. Message='{message}'");
                     return;
                 }
 
@@ -1122,6 +1125,7 @@ namespace FujitsuCDU
                 }
                 else
                 {
+                    LogEvents($"No error message received .Good transaction.");
                     SuccessDispenseMessage = message;
                     var canDetails1to4 = message.Substring(180, 16);
                     var canMaxMinDetails1to4 = message.Substring(342, 40);
@@ -1146,9 +1150,14 @@ namespace FujitsuCDU
                     LogEvents($"Total Dispensed bill details : {dispensedMessage}");
                     if (IsDispenseReqSent)
                     {
+                        LogEvents($"Sending message to CDU to present the cash : {RequestFrame.DeliverCash}");
                         IsDispenseReqSent = false;
                         State = TState.stWaitPresenter;
                         DeliverAndWait();
+                    }
+                    else
+                    {
+                        LogEvents($"No dispense request sent and no message to CDU to present the cash");
                     }
                 }
 
