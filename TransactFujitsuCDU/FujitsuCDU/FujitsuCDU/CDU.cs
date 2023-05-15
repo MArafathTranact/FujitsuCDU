@@ -595,40 +595,6 @@ namespace FujitsuCDU
             }
         }
 
-        private void CDU_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                LogEvents("Cleaning up resource allocation.");
-
-                if (initializeThread != null)
-                    initializeThread.Abort(50);
-                if (bgThread != null)
-                    bgThread.Abort(50);
-
-
-                if (initializeThread != null)
-                    initializeThread.Abort(50);
-                if (bgThread != null)
-                    bgThread.Abort(50);
-                LogEvents("CDU Application closed.");
-
-                Task.Delay(30000);
-
-                foreach (var process in Process.GetProcessesByName("FujitsuCDU"))
-                {
-                    LogEvents("Cleaning up resource allocation and its usuage is completed");
-                    Task.Delay(30000);
-                    process.Kill();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                LogEvents($"Exception at CDU_FormClosing{ex.Message}");
-            }
-
-        }
 
 
         public void SendMessage(string message)
@@ -2395,6 +2361,41 @@ namespace FujitsuCDU
         private void LogEvents(string input)
         {
             Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff} : {input}");
+        }
+
+
+        private void CDU_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                LogEvents("Cleaning up resource allocation.");
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+
+
+                if (initializeThread != null)
+                    initializeThread.Abort(50);
+                if (bgThread != null)
+                    bgThread.Abort(50);
+
+                LogEvents("CDU Application closed .");
+                Thread.Sleep(2000);
+
+                foreach (var process in Process.GetProcessesByName("FujitsuCDU"))
+                {
+                    LogEvents("Cleaning up resource allocation and its usuage is completed");
+                    Task.Delay(30000);
+                    process.Kill();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogEvents($"Exception at CDU_FormClosing : {ex.Message}");
+            }
+
         }
     }
 }
