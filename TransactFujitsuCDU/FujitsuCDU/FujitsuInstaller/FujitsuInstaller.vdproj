@@ -28,13 +28,7 @@
         "Entry"
         {
         "MsmKey" = "8:_3E39A1DC94F9F2B4DC82A1BA08FF29EF"
-        "OwnerKey" = "8:_6E35F4FBB2F4F90A900CC935B4D1A657"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6E35F4FBB2F4F90A900CC935B4D1A657"
-        "OwnerKey" = "8:_36F7C395BC454020BAE8E95ACDBCE6FF"
+        "OwnerKey" = "8:_9FD878B33B3027AEA854A5281CA0A817"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -45,26 +39,38 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9A1F790B71BCF6770D54230A53F6A8CF"
+        "MsmKey" = "8:_9FD878B33B3027AEA854A5281CA0A817"
+        "OwnerKey" = "8:_36F7C395BC454020BAE8E95ACDBCE6FF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A616CE58E1DD616632744BBA586E6041"
+        "OwnerKey" = "8:_36F7C395BC454020BAE8E95ACDBCE6FF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A616CE58E1DD616632744BBA586E6041"
+        "OwnerKey" = "8:_9FD878B33B3027AEA854A5281CA0A817"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_36F7C395BC454020BAE8E95ACDBCE6FF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_36F7C395BC454020BAE8E95ACDBCE6FF"
+        "OwnerKey" = "8:_A616CE58E1DD616632744BBA586E6041"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9A1F790B71BCF6770D54230A53F6A8CF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6E35F4FBB2F4F90A900CC935B4D1A657"
+        "OwnerKey" = "8:_9FD878B33B3027AEA854A5281CA0A817"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -104,6 +110,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -128,6 +142,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -209,37 +231,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6E35F4FBB2F4F90A900CC935B4D1A657"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_6E35F4FBB2F4F90A900CC935B4D1A657"
-                    {
-                    "Name" = "8:System.Net.Http.Formatting.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.Net.Http.Formatting.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B7E1B9C4ED954E26ABC538820C3EE220"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_76AEA614054EBA5FFA6A42997DD6D781"
             {
             "AssemblyRegister" = "3:1"
@@ -271,14 +262,45 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9A1F790B71BCF6770D54230A53F6A8CF"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9FD878B33B3027AEA854A5281CA0A817"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_9FD878B33B3027AEA854A5281CA0A817"
+                    {
+                    "Name" = "8:System.Net.Http.Formatting.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Net.Http.Formatting.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B7E1B9C4ED954E26ABC538820C3EE220"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A616CE58E1DD616632744BBA586E6041"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9A1F790B71BCF6770D54230A53F6A8CF"
+                    "_A616CE58E1DD616632744BBA586E6041"
                     {
                     "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
@@ -358,15 +380,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FujitsuInstaller"
-        "ProductCode" = "8:{AA8FC128-5FDD-4381-AD6D-00F1EF078143}"
-        "PackageCode" = "8:{C154392F-7F56-498D-8461-46FFFF450C92}"
+        "ProductCode" = "8:{681B3E4A-EE3F-4567-9FE3-DEBBBEAF9249}"
+        "PackageCode" = "8:{EA66DB82-EA37-4439-B36F-5BDC89A757FB}"
         "UpgradeCode" = "8:{50088D85-6880-4740-8175-84EBC8249AE1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.5"
+        "ProductVersion" = "8:1.0.6"
         "Manufacturer" = "8:Transact Payment Systems ,Inc"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -894,7 +916,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_36F7C395BC454020BAE8E95ACDBCE6FF"
             {
-            "SourcePath" = "8:..\\FujitsuCDU\\obj\\Release\\FujitsuCDU.exe"
+            "SourcePath" = "8:..\\FujitsuCDU\\obj\\Debug\\FujitsuCDU.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B7E1B9C4ED954E26ABC538820C3EE220"
