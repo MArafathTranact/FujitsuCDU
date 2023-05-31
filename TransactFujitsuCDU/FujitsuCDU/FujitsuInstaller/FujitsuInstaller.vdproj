@@ -380,15 +380,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FujitsuInstaller"
-        "ProductCode" = "8:{681B3E4A-EE3F-4567-9FE3-DEBBBEAF9249}"
-        "PackageCode" = "8:{EA66DB82-EA37-4439-B36F-5BDC89A757FB}"
+        "ProductCode" = "8:{0082DBB3-9576-47F8-A002-AB3775553C11}"
+        "PackageCode" = "8:{3B1E199E-9741-421D-A0AE-36C5D7505A19}"
         "UpgradeCode" = "8:{50088D85-6880-4740-8175-84EBC8249AE1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.6"
+        "ProductVersion" = "8:1.0.8"
         "Manufacturer" = "8:Transact Payment Systems ,Inc"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -916,7 +916,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_36F7C395BC454020BAE8E95ACDBCE6FF"
             {
-            "SourcePath" = "8:..\\FujitsuCDU\\obj\\Debug\\FujitsuCDU.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B7E1B9C4ED954E26ABC538820C3EE220"
