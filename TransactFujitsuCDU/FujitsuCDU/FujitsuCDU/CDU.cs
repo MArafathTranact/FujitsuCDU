@@ -1255,7 +1255,12 @@ namespace FujitsuCDU
                         }
                         cassetteCount++;
                     }
-                    SendSocketMessage($"0031.{canStatus}..9");
+
+                    if (BarcodeReceived)
+                        SendSocketMessage($"0031.{canStatus}..9");
+                    else
+                        SendSocketMessage($"0035.{canStatus}..9");
+
                     LogEvents($"Message to EZCash socket : {Socketerrorcode}");
                 }
 
@@ -1343,6 +1348,8 @@ namespace FujitsuCDU
             foreach (var item in can1to4Status.SplitInParts(2))
             {
                 if (item[0] == '8')
+                    cassetteStatus += "2";
+                else if (item[0] == '9')
                     cassetteStatus += "4";
                 else
                     cassetteStatus += "0";
@@ -1352,6 +1359,8 @@ namespace FujitsuCDU
             foreach (var item in can5to8Status.SplitInParts(2))
             {
                 if (item[0] == '8')
+                    cassetteStatus += "2";
+                else if (item[0] == '9')
                     cassetteStatus += "4";
                 else
                     cassetteStatus += "0";
@@ -2008,7 +2017,7 @@ namespace FujitsuCDU
 
                 }
 
-                SendSocketMessage($"0022.000..9");
+                SendSocketMessage($"0034.000..9");
             });
         }
 
@@ -2109,8 +2118,11 @@ namespace FujitsuCDU
                     byte[] bytesToRead = new byte[ezCashclient.ReceiveBufferSize];
                     int bytesRead = clientStream.Read(bytesToRead, 0, ezCashclient.ReceiveBufferSize);
                     var ezCashResponse = utilities.ByteToHexaEZCash(bytesToRead.Skip(2).Take(bytesRead).ToArray(), bytesRead).Split(',');
-                    WelcomeScreen1 = ezCashResponse[0];
-                    WelcomeScreen2 = ezCashResponse[1].Replace(".", "");
+                    if (ezCashResponse != null && ezCashResponse.Count() > 0)
+                        WelcomeScreen1 = ezCashResponse[0];
+
+                    if (ezCashResponse != null && ezCashResponse.Count() > 1)
+                        WelcomeScreen2 = ezCashResponse[1].Replace(".", "");
 
                     listenThread = new Thread(ReceiveMessage);
                     listenThread.Start();
