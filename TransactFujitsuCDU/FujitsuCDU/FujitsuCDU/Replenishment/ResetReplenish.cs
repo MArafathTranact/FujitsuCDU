@@ -587,6 +587,23 @@ namespace FujitsuCDU.Replenishment
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+
+            try
+            {
+                Thread threadInput = new Thread(ProcessResetReplenish);
+                threadInput.Start();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void ProcessResetReplenish()
+        {
+            SetLoading(true);
+
+
             var denoms = new List<DenominationInfo>();
 
             if (!string.IsNullOrEmpty(txtCassette1.Text))
@@ -602,10 +619,72 @@ namespace FujitsuCDU.Replenishment
             if (!string.IsNullOrEmpty(txtCassette6.Text))
                 denoms.Add(new DenominationInfo() { cassette_id = "6", host_start_count = int.Parse(txtCassette6.Text) });
 
-            ReturnDenomsInformation = denoms;
+            foreach (var denom in denoms)
+            {
 
-            IsCutEnabled = chkCUT.Checked;
+                var message = $"0011.000...19.;0616071035350001=1234567890?..";
+                switch (denom.cassette_id)
+                {
+                    case "1":
+                        message += "A HIB   ." + $"{denom.host_start_count}";
+                        break;
+                    case "2":
+                        message += "A HHB   ." + $"{denom.host_start_count}";
+                        break;
+                    case "3":
+                        message += "A HAB   ." + $"{denom.host_start_count}";
+                        break;
+                    case "4":
+                        message += "A HBB   ." + $"{denom.host_start_count}";
+                        break;
+                    case "5":
+                        message += "A HGB   ." + $"{denom.host_start_count}";
+                        break;
+                    case "6":
+                        message += "A HKB   ." + $"{denom.host_start_count}";
+                        break;
+                    default:
+                        break;
+                }
 
+                if (denom.host_start_count != 0)
+                {
+                    LogEvents($"Resetting {denom.host_start_count} for cassette {denom.cassette_id}");
+                    SendSocketMessage(message);
+                    Thread.Sleep(1000);
+                }
+            }
+
+            if (chkCUT.Checked)
+            {
+                LogEvents($"Sending CUT command");
+                var message = $"0011.000...11.;0616071035350001=1234567890?..A F     .00000400...";
+                SendSocketMessage(message);
+
+            }
+
+            SetLoading(false);
+        }
+
+
+        private void SetLoading(bool displayLoader)
+        {
+            if (displayLoader)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    picLoader.Visible = true;
+                    this.Cursor = Cursors.WaitCursor;
+                });
+            }
+            else
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    picLoader.Visible = false;
+                    this.Cursor = Cursors.Default;
+                });
+            }
         }
 
         public void SendSocketMessage(string message)

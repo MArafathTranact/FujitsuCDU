@@ -91,16 +91,19 @@ C:\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU
 C:\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Reactive.Linq.xml
 C:\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\NLog.config
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\FujitsuCDU.exe.config
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\FujitsuCDU.exe
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\FujitsuCDU.pdb
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\Newtonsoft.Json.dll
+C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\NLog.dll
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Net.Http.Formatting.dll
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Reactive.dll
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Reactive.Linq.dll
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Threading.Tasks.Extensions.dll
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\Newtonsoft.Json.xml
+C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\NLog.xml
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Net.Http.Formatting.xml
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Reactive.xml
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\System.Reactive.Linq.xml
@@ -118,6 +121,3 @@ C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\Tra
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Debug\FujitsuCDU.csproj.Up2Date
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Debug\FujitsuCDU.exe
 C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\obj\Debug\FujitsuCDU.pdb
-C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\NLog.config
-C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\NLog.dll
-C:\Arafath\Arafath - 5202024\Arafath\Arafath\Projects\Tranact\CDU\FujitsuCDU\TransactFujitsuCDU\FujitsuCDU\FujitsuCDU\bin\Debug\NLog.xml

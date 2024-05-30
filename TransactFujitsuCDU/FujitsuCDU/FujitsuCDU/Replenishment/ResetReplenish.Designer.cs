@@ -51,6 +51,8 @@
             this.btnSubmit = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.chkCUT = new System.Windows.Forms.CheckBox();
+            this.picLoader = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.picLoader)).BeginInit();
             this.SuspendLayout();
             // 
             // lblCassette6Result
@@ -262,11 +264,25 @@
             this.chkCUT.Text = "Terminal totals have been reset";
             this.chkCUT.UseVisualStyleBackColor = true;
             // 
+            // picLoader
+            // 
+            this.picLoader.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.picLoader.Image = global::FujitsuCDU.Properties.Resources.Spinner;
+            this.picLoader.InitialImage = global::FujitsuCDU.Properties.Resources.Spinner;
+            this.picLoader.Location = new System.Drawing.Point(315, 97);
+            this.picLoader.Name = "picLoader";
+            this.picLoader.Size = new System.Drawing.Size(74, 66);
+            this.picLoader.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picLoader.TabIndex = 46;
+            this.picLoader.TabStop = false;
+            this.picLoader.Visible = false;
+            // 
             // ResetReplenish
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(696, 287);
+            this.Controls.Add(this.picLoader);
             this.Controls.Add(this.chkCUT);
             this.Controls.Add(this.lblCassette6Result);
             this.Controls.Add(this.lblCassette5Result);
@@ -297,6 +313,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Reset Cash";
             this.Load += new System.EventHandler(this.ResetReplenish_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.picLoader)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -327,5 +344,6 @@
         private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox chkCUT;
+        private System.Windows.Forms.PictureBox picLoader;
     }
 }

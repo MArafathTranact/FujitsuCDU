@@ -38,15 +38,15 @@ namespace FujitsuCDU.Replenishment
             AddReplenish addReplenish = new AddReplenish(DenomsInformation, ezCashclient);
             addReplenish.ShowDialog();
 
-            var denoms = addReplenish.ReturnDenomsInformation;
-            if (denoms != null && denoms.Any())
-            {
-                Task.Run(async () =>
-                {
-                    await ProcessResetCash(denoms, false, false);
+            //var denoms = addReplenish.ReturnDenomsInformation;
+            //if (denoms != null && denoms.Any())
+            //{
+            //    Task.Run(async () =>
+            //    {
+            //        await ProcessResetCash(denoms, false, false);
 
-                });
-            }
+            //    });
+            //}
 
 
         }
@@ -56,16 +56,16 @@ namespace FujitsuCDU.Replenishment
             ResetReplenish resetReplenish = new ResetReplenish(DenomsInformation, ezCashclient);
             resetReplenish.ShowDialog();
 
-            var denoms = resetReplenish.ReturnDenomsInformation;
-            var isCutEnabled = resetReplenish.IsCutEnabled;
-            if (denoms != null && denoms.Any())
-            {
-                Task.Run(async () =>
-                {
-                    await ProcessResetCash(denoms, true, isCutEnabled);
+            //var denoms = resetReplenish.ReturnDenomsInformation;
+            //var isCutEnabled = resetReplenish.IsCutEnabled;
+            //if (denoms != null && denoms.Any())
+            //{
+            //    Task.Run(async () =>
+            //    {
+            //        await ProcessResetCash(denoms, true, isCutEnabled);
 
-                });
-            }
+            //    });
+            //}
 
         }
 

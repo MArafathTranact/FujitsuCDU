@@ -584,6 +584,21 @@ namespace FujitsuCDU.Replenishment
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Thread threadInput = new Thread(ProcessAddReplenish);
+                threadInput.Start();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void ProcessAddReplenish()
+        {
+            SetLoading(true);
+
             var denoms = new List<DenominationInfo>();
 
             if (!string.IsNullOrEmpty(txtCassette1.Text))
@@ -600,42 +615,66 @@ namespace FujitsuCDU.Replenishment
                 denoms.Add(new DenominationInfo() { cassette_id = "6", host_start_count = int.Parse(txtCassette6.Text) });
 
             ReturnDenomsInformation = denoms;
-            //foreach (var denom in denoms)
-            //{
-            //    var length = denom.host_start_count.ToString().Length;
+            foreach (var denom in denoms)
+            {
+                var length = denom.host_start_count.ToString().Length;
 
-            //    var message = $"0011.000...19.;0616071035350001=1234567890?..";
-            //    //var message = $"11.000...19.;0616071035350001=1234567890?..A HIB   .000002500000... ";
-            //    switch (denom.cassette_id)
-            //    {
-            //        case "1":
-            //            message += "A HIC   ." + $"{denom.host_start_count}";
-            //            break;
-            //        case "2":
-            //            message += "A HHC   ." + $"{denom.host_start_count}";
-            //            break;
-            //        case "3":
-            //            message += "A HAC   ." + $"{denom.host_start_count}";
-            //            break;
-            //        case "4":
-            //            message += "A HBC   ." + $"{denom.host_start_count}";
-            //            break;
-            //        case "5":
-            //            message += "A HGC   ." + $"{denom.host_start_count}";
-            //            break;
-            //        case "6":
-            //            message += "A HKC   ." + $"{denom.host_start_count}";
-            //            break;
-            //        default:
-            //            break;
-            //    }
+                var message = $"0011.000...19.;0616071035350001=1234567890?..";
+                //var message = $"11.000...19.;0616071035350001=1234567890?..A HIB   .000002500000... ";
+                switch (denom.cassette_id)
+                {
+                    case "1":
+                        message += "A HIC   ." + $"{denom.host_start_count}";
+                        break;
+                    case "2":
+                        message += "A HHC   ." + $"{denom.host_start_count}";
+                        break;
+                    case "3":
+                        message += "A HAC   ." + $"{denom.host_start_count}";
+                        break;
+                    case "4":
+                        message += "A HBC   ." + $"{denom.host_start_count}";
+                        break;
+                    case "5":
+                        message += "A HGC   ." + $"{denom.host_start_count}";
+                        break;
+                    case "6":
+                        message += "A HKC   ." + $"{denom.host_start_count}";
+                        break;
+                    default:
+                        break;
+                }
 
-            //    if (denom.host_start_count != 0)
-            //    {
-            //        LogEvents($"Adding {denom.host_start_count} for cassette {denom.cassette_id}");
-            //        SendSocketMessage(message);
-            //    }
-            //}
+                if (denom.host_start_count != 0)
+                {
+                    LogEvents($"Adding {denom.host_start_count} for cassette {denom.cassette_id}");
+                    SendSocketMessage(message);
+                    Thread.Sleep(1000);
+                }
+            }
+
+            SetLoading(false);
+
+
+        }
+        private void SetLoading(bool displayLoader)
+        {
+            if (displayLoader)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    picLoader.Visible = true;
+                    this.Cursor = Cursors.WaitCursor;
+                });
+            }
+            else
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    picLoader.Visible = false;
+                    this.Cursor = Cursors.Default;
+                });
+            }
         }
 
         public void SendSocketMessage(string message)

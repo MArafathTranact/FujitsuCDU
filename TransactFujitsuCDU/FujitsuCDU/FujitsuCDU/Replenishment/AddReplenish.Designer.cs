@@ -50,6 +50,8 @@
             this.lblCassette6 = new System.Windows.Forms.Label();
             this.lblCassette5Result = new System.Windows.Forms.Label();
             this.lblCassette6Result = new System.Windows.Forms.Label();
+            this.picLoader = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.picLoader)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -250,11 +252,25 @@
             this.lblCassette6Result.Size = new System.Drawing.Size(0, 13);
             this.lblCassette6Result.TabIndex = 22;
             // 
+            // picLoader
+            // 
+            this.picLoader.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.picLoader.Image = global::FujitsuCDU.Properties.Resources.Spinner;
+            this.picLoader.InitialImage = global::FujitsuCDU.Properties.Resources.Spinner;
+            this.picLoader.Location = new System.Drawing.Point(315, 97);
+            this.picLoader.Name = "picLoader";
+            this.picLoader.Size = new System.Drawing.Size(74, 66);
+            this.picLoader.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picLoader.TabIndex = 23;
+            this.picLoader.TabStop = false;
+            this.picLoader.Visible = false;
+            // 
             // AddReplenish
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(696, 270);
+            this.Controls.Add(this.picLoader);
             this.Controls.Add(this.lblCassette6Result);
             this.Controls.Add(this.lblCassette5Result);
             this.Controls.Add(this.txtCassette6);
@@ -284,6 +300,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Cash";
             this.Load += new System.EventHandler(this.AddReplenish_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.picLoader)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -313,5 +330,6 @@
         private System.Windows.Forms.Label lblCassette6;
         private System.Windows.Forms.Label lblCassette5Result;
         private System.Windows.Forms.Label lblCassette6Result;
+        private System.Windows.Forms.PictureBox picLoader;
     }
 }
