@@ -50,6 +50,7 @@ namespace FujitsuCDU
             this.pnlCasstteStatus = new System.Windows.Forms.Panel();
             this.pnlOutter = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnReplenish = new System.Windows.Forms.Button();
             this.pnlInitialize.SuspendLayout();
             this.pnlInitailize2.SuspendLayout();
             this.pnlMessage.SuspendLayout();
@@ -243,6 +244,7 @@ namespace FujitsuCDU
             // pnlCasstteStatus
             // 
             this.pnlCasstteStatus.BackColor = System.Drawing.Color.Transparent;
+            this.pnlCasstteStatus.Controls.Add(this.btnReplenish);
             this.pnlCasstteStatus.Controls.Add(this.pnlCasette8);
             this.pnlCasstteStatus.Controls.Add(this.pnlCasette7);
             this.pnlCasstteStatus.Controls.Add(this.pnlCasette6);
@@ -257,7 +259,6 @@ namespace FujitsuCDU
             this.pnlCasstteStatus.Name = "pnlCasstteStatus";
             this.pnlCasstteStatus.Size = new System.Drawing.Size(718, 42);
             this.pnlCasstteStatus.TabIndex = 10;
-            this.pnlCasstteStatus.Visible = false;
             // 
             // pnlOutter
             // 
@@ -286,6 +287,19 @@ namespace FujitsuCDU
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(718, 205);
             this.panel2.TabIndex = 5;
+            // 
+            // btnReplenish
+            // 
+            this.btnReplenish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReplenish.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReplenish.Location = new System.Drawing.Point(630, 9);
+            this.btnReplenish.Margin = new System.Windows.Forms.Padding(1);
+            this.btnReplenish.Name = "btnReplenish";
+            this.btnReplenish.Size = new System.Drawing.Size(78, 25);
+            this.btnReplenish.TabIndex = 1;
+            this.btnReplenish.Text = "Replenish";
+            this.btnReplenish.UseVisualStyleBackColor = true;
+            this.btnReplenish.Click += new System.EventHandler(this.btnReplenish_Click);
             // 
             // CDU
             // 
@@ -339,6 +353,7 @@ namespace FujitsuCDU
         private System.Windows.Forms.Panel pnlCasstteStatus;
         private System.Windows.Forms.Panel pnlOutter;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnReplenish;
     }
 }
 

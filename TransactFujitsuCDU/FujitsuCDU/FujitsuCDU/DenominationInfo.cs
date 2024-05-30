@@ -13,6 +13,7 @@ namespace FujitsuCDU
         //private readonly Logger logger = new Logger();
         private readonly API api = new API();
 
+
         [JsonProperty(PropertyName = "denomination")]
         public string denomination { get; set; }
 
@@ -32,19 +33,19 @@ namespace FujitsuCDU
         public string status { get; set; }
 
         [JsonProperty(PropertyName = "host_start_count")]
-        public int host_start_count { get; set; }
+        public int? host_start_count { get; set; }
 
         [JsonProperty(PropertyName = "host_cycle_count")]
-        public int host_cycle_count { get; set; }
+        public int? host_cycle_count { get; set; }
 
         [JsonProperty(PropertyName = "dev_start_count")]
-        public int dev_start_count { get; set; }
+        public int? dev_start_count { get; set; }
 
         [JsonProperty(PropertyName = "dev_cycle_count")]
-        public int dev_cycle_count { get; set; }
+        public int? dev_cycle_count { get; set; }
 
         [JsonProperty(PropertyName = "dev_divert_count")]
-        public int dev_divert_count { get; set; }
+        public int? dev_divert_count { get; set; }
 
         [JsonProperty(PropertyName = "added_count")]
         public string added_count { get; set; }

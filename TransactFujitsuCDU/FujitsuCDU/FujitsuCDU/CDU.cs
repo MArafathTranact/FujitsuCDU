@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using FujitsuCDU.Replenishment;
 
 namespace FujitsuCDU
 {
@@ -57,6 +58,9 @@ namespace FujitsuCDU
         public bool BarcodeReceived = false;
         public bool NoCasstteUpdateonFatal = false;
         public List<int> fatalCassetteList = new List<int>();
+        public List<DenominationInfo> denomsInformation = new List<DenominationInfo>();
+
+        bool ReplenishStarted = false;
         //
 
         #region Constant
@@ -520,6 +524,8 @@ namespace FujitsuCDU
                 if (bgThread != null)
                     bgThread.Abort(50);
 
+
+                NLog.LogManager.Shutdown();
 
                 Environment.Exit(1);
             }
@@ -1756,12 +1762,15 @@ namespace FujitsuCDU
                         {
                             ezResponse = ezResponse.Replace("]..", "]");
                         }
+                        if (denomsInformation == null)
+                            denomsInformation = new List<DenominationInfo>();
 
-                        var denoms = JsonConvert.DeserializeObject<List<DenominationInfo>>(ezResponse);
+                        denomsInformation.Clear();
+                        denomsInformation = JsonConvert.DeserializeObject<List<DenominationInfo>>(ezResponse);
 
                         var pnlCasstteStatus = Controls.Find("pnlCasstteStatus", true).FirstOrDefault();
 
-                        foreach (var item in denoms)
+                        foreach (var item in denomsInformation)
                         {
                             switch (item.cassette_nbr)
                             {
@@ -2254,6 +2263,7 @@ namespace FujitsuCDU
                 LogEvents($"Client socket SendMessage {ex.Message} ");
             }
         }
+
         public async Task ProcessSocketMessage(string ezCashMessage)
         {
             try
@@ -2297,6 +2307,9 @@ namespace FujitsuCDU
                     default:
                         LogEvents($"Parsing Cassette status details.");
                         await ProcessCassetteStatus(ezCashMessage);
+
+                        if (ReplenishStarted)
+                            await LaunchCashPosition();
                         break;
                 }
             }
@@ -2411,12 +2424,33 @@ namespace FujitsuCDU
                     process.Kill();
                 }
 
+                NLog.LogManager.Shutdown();
+
             }
             catch (Exception ex)
             {
                 LogEvents($"Exception at CDU_FormClosing : {ex.Message}");
+                NLog.LogManager.Shutdown();
             }
 
+        }
+
+        private void btnReplenish_Click(object sender, EventArgs e)
+        {
+            frmReplenish replenishOption = new frmReplenish(denomsInformation, ezCashclient);
+            ReplenishStarted = true;
+            replenishOption.ShowDialog();
+
+            int i = 0;
+        }
+
+        private async Task LaunchCashPosition()
+        {
+            CashPositionReplenish cashPositionReplensh = new CashPositionReplenish(ezCashclient);
+            cashPositionReplensh.DenomsInformation = denomsInformation;
+            cashPositionReplensh.ShowDialog();
+
+            await Task.CompletedTask;
         }
     }
 }
