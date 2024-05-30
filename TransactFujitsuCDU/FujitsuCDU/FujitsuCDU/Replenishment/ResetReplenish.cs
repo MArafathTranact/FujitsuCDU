@@ -30,6 +30,13 @@ namespace FujitsuCDU.Replenishment
         public TcpClient ezCashclient;
         public NetworkStream clientStream;
 
+        public List<DenominationInfo> ReturnDenomsInformation
+        {
+            get; set;
+        }
+
+        public bool IsCutEnabled = false;
+
         public ResetReplenish(List<DenominationInfo> DenomsInformation, TcpClient tcpClient)
         {
             InitializeComponent();
@@ -167,6 +174,15 @@ namespace FujitsuCDU.Replenishment
                            {
                                denoms = "0";
                            }
+                           else
+                           {
+                               if (denoms.Contains('.'))
+                               {
+                                   var dollar = denoms.Split('.');
+                                   if (dollar.Length > 1)
+                                       denoms = dollar[0];
+                               }
+                           }
                            BeginInvoke((Action)delegate ()
                            {
                                lblCassette1Result.Text = "$" + (int.Parse(denoms) * int.Parse(results));
@@ -217,6 +233,15 @@ namespace FujitsuCDU.Replenishment
                            {
                                denoms = "0";
                            }
+                           else
+                           {
+                               if (denoms.Contains('.'))
+                               {
+                                   var dollar = denoms.Split('.');
+                                   if (dollar.Length > 1)
+                                       denoms = dollar[0];
+                               }
+                           }
                            BeginInvoke((Action)delegate ()
                            {
                                lblCassette2Result.Text = "$" + (int.Parse(denoms) * int.Parse(results));
@@ -266,6 +291,15 @@ namespace FujitsuCDU.Replenishment
                            {
                                denoms = "0";
                            }
+                           else
+                           {
+                               if (denoms.Contains('.'))
+                               {
+                                   var dollar = denoms.Split('.');
+                                   if (dollar.Length > 1)
+                                       denoms = dollar[0];
+                               }
+                           }
                            BeginInvoke((Action)delegate ()
                            {
                                lblCassette3Result.Text = "$" + (int.Parse(denoms) * int.Parse(results));
@@ -312,6 +346,15 @@ namespace FujitsuCDU.Replenishment
                            if (string.IsNullOrEmpty(denoms))
                            {
                                denoms = "0";
+                           }
+                           else
+                           {
+                               if (denoms.Contains('.'))
+                               {
+                                   var dollar = denoms.Split('.');
+                                   if (dollar.Length > 1)
+                                       denoms = dollar[0];
+                               }
                            }
                            BeginInvoke((Action)delegate ()
                            {
@@ -360,6 +403,15 @@ namespace FujitsuCDU.Replenishment
                            {
                                denoms = "0";
                            }
+                           else
+                           {
+                               if (denoms.Contains('.'))
+                               {
+                                   var dollar = denoms.Split('.');
+                                   if (dollar.Length > 1)
+                                       denoms = dollar[0];
+                               }
+                           }
                            BeginInvoke((Action)delegate ()
                            {
                                lblCassette5Result.Text = "$" + (int.Parse(denoms) * int.Parse(results));
@@ -406,6 +458,15 @@ namespace FujitsuCDU.Replenishment
                            if (string.IsNullOrEmpty(denoms))
                            {
                                denoms = "0";
+                           }
+                           else
+                           {
+                               if (denoms.Contains('.'))
+                               {
+                                   var dollar = denoms.Split('.');
+                                   if (dollar.Length > 1)
+                                       denoms = dollar[0];
+                               }
                            }
                            BeginInvoke((Action)delegate ()
                            {
@@ -541,51 +602,10 @@ namespace FujitsuCDU.Replenishment
             if (!string.IsNullOrEmpty(txtCassette6.Text))
                 denoms.Add(new DenominationInfo() { cassette_id = "6", host_start_count = int.Parse(txtCassette6.Text) });
 
+            ReturnDenomsInformation = denoms;
 
-            foreach (var denom in denoms)
-            {
-                var length = denom.host_start_count.ToString().Length;
+            IsCutEnabled = chkCUT.Checked;
 
-                var message = $"0011.000...19.;0616071035350001=1234567890?..";
-                //var message = $"11.000...19.;0616071035350001=1234567890?..A HIB   .000002500000... ";
-                switch (denom.cassette_id)
-                {
-                    case "1":
-                        message += "A HIB   ." + $"{denom.host_start_count}";
-                        break;
-                    case "2":
-                        message += "A HHB   ." + $"{denom.host_start_count}";
-                        break;
-                    case "3":
-                        message += "A HAB   ." + $"{denom.host_start_count}";
-                        break;
-                    case "4":
-                        message += "A HBB   ." + $"{denom.host_start_count}";
-                        break;
-                    case "5":
-                        message += "A HGB   ." + $"{denom.host_start_count}";
-                        break;
-                    case "6":
-                        message += "A HKB   ." + $"{denom.host_start_count}";
-                        break;
-                    default:
-                        break;
-                }
-
-                if (denom.host_start_count != 0)
-                {
-                    LogEvents($"Resetting {denom.host_start_count} for cassette {denom.cassette_id}");
-                    SendSocketMessage(message);
-                }
-            }
-
-            if (chkCUT.Checked)
-            {
-                LogEvents($"Terminal CUT is enabled . Sending CUT ");
-                var message = $"11.000...11.;0616071035350001=1234567890?..A F     .00000400...";
-                SendSocketMessage(message);
-
-            }
         }
 
         public void SendSocketMessage(string message)

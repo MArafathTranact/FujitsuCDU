@@ -79,6 +79,7 @@
             this.Name = "CashPositionReplenish";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "CashPositionReplenish";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CashPositionReplenish_FormClosing);
             this.Load += new System.EventHandler(this.CashPositionReplenish_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgcashPosition)).EndInit();
             this.ResumeLayout(false);

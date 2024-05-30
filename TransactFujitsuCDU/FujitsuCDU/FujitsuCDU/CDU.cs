@@ -59,8 +59,10 @@ namespace FujitsuCDU
         public bool NoCasstteUpdateonFatal = false;
         public List<int> fatalCassetteList = new List<int>();
         public List<DenominationInfo> denomsInformation = new List<DenominationInfo>();
+        public bool IsCashPositionSelected = false;
 
-        bool ReplenishStarted = false;
+        //static bool ReplenishStarted = false;
+        //static bool CashPostitionEnabled = false;
         //
 
         #region Constant
@@ -2273,8 +2275,11 @@ namespace FujitsuCDU
                 switch (type)
                 {
                     case "40.":
-                        LogEvents($"Parsing dispense response.");
-                        await ProcessBarcodeTransaction(ezCashMessage);
+                        if (!ezCashMessage.Contains("REPLENISHMENT") && !ezCashMessage.Contains("CUTOVER"))
+                        {
+                            LogEvents($"Parsing dispense response.");
+                            await ProcessBarcodeTransaction(ezCashMessage);
+                        }
                         break;
                     case "10.": //10.000.000.1
                         LogEvents($"Parsing device monitor commands.");
@@ -2305,11 +2310,14 @@ namespace FujitsuCDU
                         TimeOutTransactionForCoins();
                         break;
                     default:
-                        LogEvents($"Parsing Cassette status details.");
-                        await ProcessCassetteStatus(ezCashMessage);
+                        if (!ezCashMessage.Contains("REPLENISHMENT"))
+                        {
+                            LogEvents($"Parsing Cassette status details.");
+                            await ProcessCassetteStatus(ezCashMessage);
 
-                        if (ReplenishStarted)
-                            await LaunchCashPosition();
+                            if (ApplicationProperty.ReplenishStarted && ApplicationProperty.CashPositionStarted)
+                                await LaunchCashPosition();
+                        }
                         break;
                 }
             }
@@ -2437,11 +2445,12 @@ namespace FujitsuCDU
 
         private void btnReplenish_Click(object sender, EventArgs e)
         {
-            frmReplenish replenishOption = new frmReplenish(denomsInformation, ezCashclient);
-            ReplenishStarted = true;
+            frmReplenish replenishOption = new frmReplenish(denomsInformation, ezCashclient, IsCashPositionSelected);
+            ApplicationProperty.ReplenishStarted = true;
+
             replenishOption.ShowDialog();
 
-            int i = 0;
+            ApplicationProperty.ReplenishStarted = false;
         }
 
         private async Task LaunchCashPosition()
@@ -2452,5 +2461,11 @@ namespace FujitsuCDU
 
             await Task.CompletedTask;
         }
+    }
+
+    public static class ApplicationProperty
+    {
+        public static bool ReplenishStarted { get; set; }
+        public static bool CashPositionStarted { get; set; }
     }
 }

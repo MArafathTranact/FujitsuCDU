@@ -176,6 +176,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Resources\lightning.ico" />
+    <Content Include="Resources\Spinner.gif" />
     <Content Include="Resources\TranAct-Logo-Scaled.png" />
     <Content Include="Resources\Transact BG.jpg" />
   </ItemGroup>

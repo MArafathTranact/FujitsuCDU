@@ -50,5 +50,10 @@ namespace FujitsuCDU.Replenishment
         {
             this.Close();
         }
+
+        private void CashPositionReplenish_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ApplicationProperty.CashPositionStarted = false;
+        }
     }
 }
