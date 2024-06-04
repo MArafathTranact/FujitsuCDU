@@ -48,9 +48,9 @@ namespace FujitsuCDU
             this.lblMessage2 = new System.Windows.Forms.Label();
             this.pnlCasette1 = new System.Windows.Forms.Panel();
             this.pnlCasstteStatus = new System.Windows.Forms.Panel();
+            this.btnReplenish = new System.Windows.Forms.Button();
             this.pnlOutter = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btnReplenish = new System.Windows.Forms.Button();
             this.pnlInitialize.SuspendLayout();
             this.pnlInitailize2.SuspendLayout();
             this.pnlMessage.SuspendLayout();
@@ -260,6 +260,20 @@ namespace FujitsuCDU
             this.pnlCasstteStatus.Size = new System.Drawing.Size(718, 42);
             this.pnlCasstteStatus.TabIndex = 10;
             // 
+            // btnReplenish
+            // 
+            this.btnReplenish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReplenish.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReplenish.Location = new System.Drawing.Point(630, 9);
+            this.btnReplenish.Margin = new System.Windows.Forms.Padding(1);
+            this.btnReplenish.Name = "btnReplenish";
+            this.btnReplenish.Size = new System.Drawing.Size(78, 25);
+            this.btnReplenish.TabIndex = 1;
+            this.btnReplenish.Text = "Replenish";
+            this.btnReplenish.UseVisualStyleBackColor = true;
+            this.btnReplenish.Visible = false;
+            this.btnReplenish.Click += new System.EventHandler(this.btnReplenish_Click);
+            // 
             // pnlOutter
             // 
             this.pnlOutter.BackColor = System.Drawing.Color.Transparent;
@@ -287,19 +301,6 @@ namespace FujitsuCDU
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(718, 205);
             this.panel2.TabIndex = 5;
-            // 
-            // btnReplenish
-            // 
-            this.btnReplenish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReplenish.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReplenish.Location = new System.Drawing.Point(630, 9);
-            this.btnReplenish.Margin = new System.Windows.Forms.Padding(1);
-            this.btnReplenish.Name = "btnReplenish";
-            this.btnReplenish.Size = new System.Drawing.Size(78, 25);
-            this.btnReplenish.TabIndex = 1;
-            this.btnReplenish.Text = "Replenish";
-            this.btnReplenish.UseVisualStyleBackColor = true;
-            this.btnReplenish.Click += new System.EventHandler(this.btnReplenish_Click);
             // 
             // CDU
             // 

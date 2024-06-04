@@ -130,7 +130,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at BackgroundInitializing {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.BackgroundInitializing.", ex);
             }
         }
 
@@ -201,7 +201,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at ChangeDescription {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.ChangeDescription.", ex);
             }
 
         }
@@ -240,6 +240,11 @@ namespace FujitsuCDU
                         SocketConnected = true;
                         LogEvents($"EZCash Socket Connected.");
                         IsProcessCompleted = false;
+                        BeginInvoke((Action)delegate ()
+                        {
+                            btnReplenish.Visible = true;
+
+                        });
                         Thread initCDU = new Thread(InitCDU);
                         initCDU.Start();
                         break;
@@ -247,6 +252,12 @@ namespace FujitsuCDU
                     }
                     else
                     {
+                        BeginInvoke((Action)delegate ()
+                        {
+                            btnReplenish.Visible = false;
+
+                        });
+
                         DisplayErrorMessage();
                         Thread.Sleep(5000);
                         //Thread initializeThread = new Thread(() => BackgroundInitializing());
@@ -263,7 +274,12 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at StartCDUInit{ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.StartCDUInit.", ex);
+                BeginInvoke((Action)delegate ()
+                {
+                    btnReplenish.Visible = false;
+
+                });
                 DisplayErrorMessage();
 
             }
@@ -323,8 +339,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-
-                LogEvents($"Exception at Transact.InitCDU {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.InitCDU.", ex);
             }
 
         }
@@ -352,8 +367,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-
-                LogEvents($"Exception at StartCDUInit{ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.DisplayCassetteStatus.", ex);
             }
         }
 
@@ -438,7 +452,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at LoadScreen {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.LoadScreen.", ex);
             }
         }
 
@@ -469,7 +483,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at ProcessCmdKey {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessCmdKey.", ex);
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -503,7 +517,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at ProcessBarcodeAndDispense {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessBarcodeAndDispense.", ex);
             }
         }
 
@@ -533,7 +547,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at CDU destruction : {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.destruction", ex);
             }
 
         }
@@ -599,7 +613,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at CDU_Load {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.CDU_Load", ex);
             }
         }
 
@@ -630,7 +644,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at SendMessage : {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.SendMessage", ex);
             }
 
         }
@@ -654,7 +668,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at MyWriteStr :{ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.MyWriteStr", ex);
             }
 
         }
@@ -710,7 +724,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents(ex.Message);
+                Logger.LogExceptionWithNoLock($" Exception at CDU.DispenseAmount", ex);
             }
         }
 
@@ -769,7 +783,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at InitCDU :{ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.FujitsuProcessorInitCDU", ex);
             }
 
         }
@@ -904,7 +918,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at OnDataReceived :{ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.OnDataReceived", ex);
             }
 
         }
@@ -939,7 +953,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at SendNow :{ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.SendNow", ex);
             }
 
         }
@@ -989,7 +1003,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($" Error at ProcessMsg : {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessMsg", ex);
             }
         }
 
@@ -1173,7 +1187,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at ProcessDispResponse :{ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessDispResponse", ex);
             }
         }
 
@@ -1276,7 +1290,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($" Exception at ProcessInitResponse : {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessInitResponse", ex);
             }
         }
 
@@ -1328,7 +1342,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($" Exception at OnDispenseCompleted : {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.OnDispenseCompleted", ex);
             }
         }
 
@@ -1396,7 +1410,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at OpenPort :{ex.Message} .Attempting to reconnect ...");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.OpenPort.Attempting to reconnect ...", ex);
             }
         }
 
@@ -1414,7 +1428,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at DeliverAndWait :{ex.Message}.");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.DeliverAndWait", ex);
             }
         }
 
@@ -1429,7 +1443,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at RejectNote :{ex.Message}.");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.RejectNote", ex);
             }
         }
 
@@ -1624,7 +1638,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at TimeOutTransaction {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.TimeOutTransaction", ex);
             }
         }
 
@@ -1645,7 +1659,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at TimeOutTransactionForCoins {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.TimeOutTransactionForCoins", ex);
             }
         }
         public async Task ProcessBarcode(string barcode)
@@ -1663,7 +1677,7 @@ namespace FujitsuCDU
                 }
                 catch (Exception ex)
                 {
-                    LogEvents($"ProcessBarcode {ex.Message} ");
+                    Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessBarcode", ex);
                 }
             });
         }
@@ -1741,7 +1755,7 @@ namespace FujitsuCDU
                 }
                 catch (Exception ex)
                 {
-                    LogEvents($"ProcessBarcodeTransaction {ex.Message} ");
+                    Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessBarcodeTransaction", ex);
                     timeoutTrans.Enabled = true;
                     timeoutTrans.Start();
 
@@ -2022,8 +2036,7 @@ namespace FujitsuCDU
                             });
 
                         }
-                        LogEvents($"Exception at ProcessCassetteStatus {ex.Message} ");
-
+                        Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessCassetteStatus", ex);
                     }
 
                 }
@@ -2105,17 +2118,23 @@ namespace FujitsuCDU
 
         public bool CreateEZCashSocket()
         {
+
+            string SERVER_IP = "";
+            string local_IP = "";
+            int localPort = 0;
+            int remotePort = 0;
             try
             {
 
-
-                string SERVER_IP = serviceConfiguration.GetFileLocation("EZcashIP");
-                string local_IP = serviceConfiguration.GetFileLocation("Ip");
+                SERVER_IP = serviceConfiguration.GetFileLocation("EZcashIP");
+                local_IP = serviceConfiguration.GetFileLocation("Ip");
+                localPort = Convert.ToInt32(serviceConfiguration.GetFileLocation("Port"));
+                remotePort = Convert.ToInt32(serviceConfiguration.GetFileLocation("EZcashPort"));
 
                 IPAddress localIP = IPAddress.Parse(local_IP);
-                int localPort = Convert.ToInt32(serviceConfiguration.GetFileLocation("Port"));
+
                 IPAddress remoteIP = IPAddress.Parse(SERVER_IP);
-                int remotePort = Convert.ToInt32(serviceConfiguration.GetFileLocation("EZcashPort"));
+
                 IPEndPoint remoteEP = new IPEndPoint(remoteIP, remotePort);
                 IPEndPoint localEP = new IPEndPoint(localIP, localPort);
 
@@ -2147,7 +2166,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Client socket ReceiveMessage {ex.Message}\r\n{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff} : Attempting to reconnect ...");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.CreateEZCashSocket. EZcashIP={SERVER_IP} ,EZcash Port={remotePort},CDU IP={local_IP},CDU Port={localPort}.Attempting to reconnect ...", ex);
                 if (ezCashclient != null)
                 {
                     if (ezCashclient.Connected)
@@ -2209,6 +2228,7 @@ namespace FujitsuCDU
                     catch (Exception ex)
                     {
                         LogEvents($"Client socket ReceiveMessage {ex.Message} ");
+                        Logger.LogExceptionWithNoLock($" Exception at CDU.CDU_Load", ex);
                         if (ezCashclient != null)
                         {
                             if (ezCashclient.Connected)
@@ -2262,7 +2282,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Client socket SendMessage {ex.Message} ");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.SendSocketMessage", ex);
             }
         }
 
@@ -2323,7 +2343,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Client socket ReceiveMessage {ex.Message} ");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.ProcessSocketMessage", ex);
             }
 
         }
@@ -2369,7 +2389,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Client socket ReceiveMessage {ex.Message} ");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.DisplayErrorMessage", ex);
             }
         }
 
@@ -2402,7 +2422,7 @@ namespace FujitsuCDU
 
         private void LogEvents(string input)
         {
-            Logger.LogWithNoLock($"{DateTime.Now:MM-dd-yyyy HH:mm:ss.fff} : {input}");
+            Logger.LogWithNoLock($" {input}");
         }
 
 
@@ -2437,7 +2457,7 @@ namespace FujitsuCDU
             }
             catch (Exception ex)
             {
-                LogEvents($"Exception at CDU_FormClosing : {ex.Message}");
+                Logger.LogExceptionWithNoLock($" Exception at CDU.CDU_FormClosing", ex);
                 NLog.LogManager.Shutdown();
             }
 

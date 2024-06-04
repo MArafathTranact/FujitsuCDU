@@ -73,7 +73,7 @@
             // 
             // txtCassette6
             // 
-            this.txtCassette6.Location = new System.Drawing.Point(468, 145);
+            this.txtCassette6.Location = new System.Drawing.Point(479, 145);
             this.txtCassette6.Multiline = true;
             this.txtCassette6.Name = "txtCassette6";
             this.txtCassette6.Size = new System.Drawing.Size(100, 25);
@@ -91,7 +91,7 @@
             // 
             // txtCassette5
             // 
-            this.txtCassette5.Location = new System.Drawing.Point(468, 88);
+            this.txtCassette5.Location = new System.Drawing.Point(479, 88);
             this.txtCassette5.Multiline = true;
             this.txtCassette5.Name = "txtCassette5";
             this.txtCassette5.Size = new System.Drawing.Size(100, 25);
@@ -161,7 +161,7 @@
             // 
             // txtCassette4
             // 
-            this.txtCassette4.Location = new System.Drawing.Point(468, 34);
+            this.txtCassette4.Location = new System.Drawing.Point(479, 34);
             this.txtCassette4.Multiline = true;
             this.txtCassette4.Name = "txtCassette4";
             this.txtCassette4.Size = new System.Drawing.Size(100, 25);
@@ -169,7 +169,7 @@
             // 
             // txtCassette3
             // 
-            this.txtCassette3.Location = new System.Drawing.Point(143, 142);
+            this.txtCassette3.Location = new System.Drawing.Point(154, 142);
             this.txtCassette3.Multiline = true;
             this.txtCassette3.Name = "txtCassette3";
             this.txtCassette3.Size = new System.Drawing.Size(100, 25);
@@ -177,7 +177,7 @@
             // 
             // txtCassette2
             // 
-            this.txtCassette2.Location = new System.Drawing.Point(143, 85);
+            this.txtCassette2.Location = new System.Drawing.Point(154, 85);
             this.txtCassette2.Multiline = true;
             this.txtCassette2.Name = "txtCassette2";
             this.txtCassette2.Size = new System.Drawing.Size(100, 25);
@@ -185,7 +185,7 @@
             // 
             // txtCassette1
             // 
-            this.txtCassette1.Location = new System.Drawing.Point(143, 30);
+            this.txtCassette1.Location = new System.Drawing.Point(154, 30);
             this.txtCassette1.Multiline = true;
             this.txtCassette1.Name = "txtCassette1";
             this.txtCassette1.Size = new System.Drawing.Size(100, 25);
