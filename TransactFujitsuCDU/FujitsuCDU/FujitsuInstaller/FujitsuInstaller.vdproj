@@ -731,7 +731,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_B7E1B9C4ED954E26ABC538820C3EE220"
             {
-            "DefaultLocation" = "8:C:\\Program Files (x86)\\EZCash\\"
+            "DefaultLocation" = "8:C:\\Program Files (x86)\\EZCash\\EZCDU"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
@@ -768,15 +768,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FujitsuInstaller"
-        "ProductCode" = "8:{50EED3DD-FC79-425F-AD3D-EB5DBC0D7BFE}"
-        "PackageCode" = "8:{9EC18BB8-7F70-4855-B77C-13741B1744C4}"
+        "ProductCode" = "8:{198C44B4-1D17-4A3C-A737-C7714A76FFBC}"
+        "PackageCode" = "8:{CCAF22EA-0C32-450F-AABD-A58427A03074}"
         "UpgradeCode" = "8:{50088D85-6880-4740-8175-84EBC8249AE1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.10"
+        "InstallAllUsers" = "11:TRUE"
+        "ProductVersion" = "8:1.0.11"
         "Manufacturer" = "8:Transact Payment Systems ,Inc"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

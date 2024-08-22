@@ -97,6 +97,7 @@
     <Compile Include="Common\Utilities.cs" />
     <Compile Include="CRC.cs" />
     <Compile Include="DenominationInfo.cs" />
+    <Compile Include="Device.cs" />
     <Compile Include="EZCashModule\DispenseRequest.cs" />
     <Compile Include="EZCashModule\EZCashHandler.cs" />
     <Compile Include="EZCashSocket.cs" />

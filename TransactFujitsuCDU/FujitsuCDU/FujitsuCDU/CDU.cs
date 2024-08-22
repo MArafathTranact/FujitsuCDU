@@ -28,6 +28,7 @@ namespace FujitsuCDU
         Thread initializeThread;
         Thread bgThread;
         public string descriptionLoad;
+        public string descriptionDirectPayLoad;
         private string _barcode = "";
         public BackgroundWorker backgroundWorker1;
 
@@ -60,6 +61,7 @@ namespace FujitsuCDU
         public List<int> fatalCassetteList = new List<int>();
         public List<DenominationInfo> denomsInformation = new List<DenominationInfo>();
         public bool IsCashPositionSelected = false;
+        public bool IsDirectPay = false;
 
         //static bool ReplenishStarted = false;
         //static bool CashPostitionEnabled = false;
@@ -151,7 +153,7 @@ namespace FujitsuCDU
                             lblInitial1.Text = WelcomeScreen1;
                             lblInitial2.Text = WelcomeScreen2;
 
-                            lblMessage1.Text = descriptionLoad;
+                            lblMessage1.Text = IsDirectPay == false ? descriptionLoad : descriptionDirectPayLoad;
 
                             lblMessage1.Font = new Font("Calibri", 30, FontStyle.Italic);
 
@@ -468,7 +470,7 @@ namespace FujitsuCDU
 
                 if (c == (char)Keys.Return)
                 {
-                    if (!IsDown && !IsDisConnected && !BarcodeReceived)
+                    if (!IsDown && !IsDisConnected && !BarcodeReceived & !IsDirectPay)
                     {
                         LogEvents($"Barcode Received : {_barcode}");
                         BarcodeReceived = true;
@@ -562,6 +564,7 @@ namespace FujitsuCDU
             this.MinimumSize = new Size(1500, 950);
             this.MaximumSize = new Size(1500, 950);
             descriptionLoad = GetFileLocation("DescriptionLoad");
+            descriptionDirectPayLoad = GetFileLocation("DescriptionDirectPayLoad");
 
             lblInitial1.SetBounds((pnlInitialize.ClientSize.Width - lblInitial1.Width) / 2, (pnlInitialize.ClientSize.Height - lblInitial1.Height) / 2, 0, 0, BoundsSpecified.Location);
 
@@ -1599,7 +1602,11 @@ namespace FujitsuCDU
 
         private void TimeOutEvent(object source, ElapsedEventArgs e)
         {
-            DisplayDescription(5, "", 0, "", 0, "Please scan the barcode", 25, "", 0);
+            if (IsDirectPay)
+                DisplayDescription(5, "", 0, "", 0, descriptionDirectPayLoad, 25, "", 0);
+            else
+                DisplayDescription(5, "", 0, "", 0, descriptionLoad, 25, "", 0);
+
             DisplayDescription(1, WelcomeScreen1, 50, "", 0, "", 25, "", 0);
             DisplayDescription(2, "", 0, WelcomeScreen2, 30, "", 25, "", 0);
             timeoutTimer.Stop();
@@ -2147,12 +2154,20 @@ namespace FujitsuCDU
                 {
                     byte[] bytesToRead = new byte[ezCashclient.ReceiveBufferSize];
                     int bytesRead = clientStream.Read(bytesToRead, 0, ezCashclient.ReceiveBufferSize);
-                    var ezCashResponse = utilities.ByteToHexaEZCash(bytesToRead.Skip(2).Take(bytesRead).ToArray(), bytesRead).Split(',');
-                    if (ezCashResponse != null && ezCashResponse.Count() > 0)
-                        WelcomeScreen1 = ezCashResponse[0];
 
-                    if (ezCashResponse != null && ezCashResponse.Count() > 1)
-                        WelcomeScreen2 = ezCashResponse[1].Replace(".", "");
+                    var ezCashResponse = utilities.ByteToHexaEZCash(bytesToRead.Skip(2).Take(bytesRead).ToArray(), bytesRead).Split(',');
+
+                    if (ezCashResponse[ezCashResponse.Length - 1].Contains(".."))
+                        ezCashResponse[ezCashResponse.Length - 1] = ezCashResponse[ezCashResponse.Length - 1].Replace("..", "");
+
+                    var device = JsonConvert.DeserializeObject<Device>(string.Join(",", ezCashResponse));
+
+                    if (device != null)
+                    {
+                        WelcomeScreen1 = device.welcome1;
+                        WelcomeScreen2 = device.welcome2;
+                        IsDirectPay = device.Payment_Type != null && (device.Payment_Type.ToLower() == "direct");
+                    }
 
                     listenThread = new Thread(ReceiveMessage);
                     listenThread.Start();
@@ -2273,7 +2288,7 @@ namespace FujitsuCDU
         {
             try
             {
-
+                Thread.Sleep(1000);
                 byte[] buffer = new byte[ezCashclient.ReceiveBufferSize];
                 byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(message); //("1111.000...1 > .38527859440..ABC....");
                 LogEvents($"Sending request to EZCash {message} ");
@@ -2301,6 +2316,19 @@ namespace FujitsuCDU
                             await ProcessBarcodeTransaction(ezCashMessage);
                         }
                         break;
+
+                    case "11.":
+                        var barcode = ezCashMessage.Trim().Split('.');
+
+                        if (barcode.Length > 1)
+                        {
+
+                            Thread cduDispense = new Thread(() => ProcessBarcodeAndDispense(barcode[1].Trim()));
+                            cduDispense.Start();
+                            cduDispense.Join();
+                        }
+                        break;
+
                     case "10.": //10.000.000.1
                         LogEvents($"Parsing device monitor commands.");
                         if (ezCashMessage.Equals("10.000.000.2.."))
